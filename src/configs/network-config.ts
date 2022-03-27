@@ -32,4 +32,8 @@ const development = new NetworkConfig({
     port: process.env.PORT || 5000
 });
 
+// The current config
+let currentConfig: NetworkConfig = development;
+
+export default currentConfig;
 export { development };
