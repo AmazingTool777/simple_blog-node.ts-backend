@@ -1,0 +1,26 @@
+[
+    {
+        "_id": "6240a5dfd6b8931ce830be78",
+        "title": "The joy of working from Home",
+        "photoURL": "/public/posts/nubelson-fernandes-Yh2Y8avvPec-unsplash.jpg",
+        "content": "Lorem ipsum dolor, sit amet consectetur adipisicing elit. Itaque perspiciatis ut voluptatum non recusandae repudiandae hic quod repellendus. Temporibus, ratione.",
+        "categories": [],
+        "author": "624059385ad45d2a6c4a2b72"
+    },
+    {
+        "_id": "6240a5dfd6b8931ce830be79",
+        "title": "Bangladeshi foods' unique diversity",
+        "photoURL": "/public/posts/roam-in-color-lWjd2XSRTAQ-unsplash.jpg",
+        "content": "Lorem ipsum dolor, sit amet consectetur adipisicing elit. Itaque perspiciatis ut voluptatum non recusandae repudiandae hic quod repellendus. Temporibus, ratione.",
+        "categories": [],
+        "author": "624059385ad45d2a6c4a2b71"
+    },
+    {
+        "_id": "6240a5dfd6b8931ce830be7a",
+        "title": "The negative effects of medias",
+        "photoURL": "/public/posts/somruthai-keawjan-NCSHHeuQ6Ac-unsplash.jpg",
+        "content": "Lorem ipsum dolor, sit amet consectetur adipisicing elit. Itaque perspiciatis ut voluptatum non recusandae repudiandae hic quod repellendus. Temporibus, ratione.",
+        "categories": [],
+        "author": "624059385ad45d2a6c4a2b73"
+    }
+]

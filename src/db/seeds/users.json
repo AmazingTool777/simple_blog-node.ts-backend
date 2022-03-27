@@ -1,0 +1,30 @@
+[
+    {
+        "_id": "624059385ad45d2a6c4a2b70",
+        "firstName": "John",
+        "lastName": "Doe",
+        "gender": "M",
+        "photo": null
+    },
+    {
+        "_id": "624059385ad45d2a6c4a2b71",
+        "firstName": "Vicky",
+        "lastName": "Hladynets",
+        "gender": "M",
+        "photo": "/public/users/vicky-hladynets-C8Ta0gwPbQg-unsplash.jpg"
+    },
+    {
+        "_id": "624059385ad45d2a6c4a2b72",
+        "firstName": "Christina",
+        "lastName": "Hailand",
+        "gender": "F",
+        "photo": "/public/users/christina-wocintechchat-com-0Zx1bDv5BNY-unsplash.jpg"
+    },
+    {
+        "_id": "624059385ad45d2a6c4a2b73",
+        "firstName": "Craig",
+        "lastName": "McKay",
+        "gender": "M",
+        "photo": "/public/users/craig-mckay-jmURdhtm7Ng-unsplash.jpg"
+    }
+]
