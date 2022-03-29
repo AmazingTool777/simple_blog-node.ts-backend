@@ -4,6 +4,9 @@ import express, { ErrorRequestHandler, Request, Response, NextFunction } from "e
 // App error
 import AppError from "./@types/AppError-class";
 
+// Controllers
+import UsersController from "./controllers/users-controller";
+
 // Express application
 const app = express();
 
@@ -15,13 +18,8 @@ const app = express();
 // Static files
 app.use('/public', express.static(path.join(__dirname, 'static')));
 
-app.get('/', async (req: Request, res: Response, next: NextFunction) => {
-    try {
-        res.send('Hello world');
-    } catch (error) {
-        next(error);
-    }
-});
+// Gets users
+app.get('/api/users', UsersController.getUsers);
 
 /*
 ** ***********************************************************************************
