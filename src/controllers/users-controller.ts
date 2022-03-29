@@ -1,6 +1,9 @@
 import { Request, Response, NextFunction } from "express";
 import { FilterQuery } from "mongoose";
 
+// App error class
+import AppError from "../@types/AppError-class";
+
 // User model
 import UserModel, { UserAttributes } from "../models/user-model";
 
@@ -26,6 +29,23 @@ class UsersController {
             next(error);
         }
     }
+
+
+    // Gets a user *********************************************************************
+    static async getUser(req: Request, res: Response, next: NextFunction) {
+        try {
+            const user = await UserModel.findOne({ _id: req.params.userId });
+            if (!user) return next(new AppError(404, "The user is not found"));
+            res.json(user);
+        }
+        catch (error) {
+            next(error);
+        }
+    }
+
+
+    // Signs up a user
+
 
 }
 

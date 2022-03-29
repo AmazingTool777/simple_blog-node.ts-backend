@@ -21,6 +21,9 @@ app.use('/public', express.static(path.join(__dirname, 'static')));
 // Gets users
 app.get('/api/users', UsersController.getUsers);
 
+// Gets a user
+app.get('/api/users/:userId', UsersController.getUser);
+
 /*
 ** ***********************************************************************************
 */
