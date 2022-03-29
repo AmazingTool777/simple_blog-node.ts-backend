@@ -54,3 +54,4 @@ userModelSchema.virtual('photoURL').get(function (this: UserAttributes) {
 const UserModel = mongoose.model('User', userModelSchema);
 
 export default UserModel;
+export { UserAttributes };

@@ -48,3 +48,4 @@ postModelSchema.virtual('photoURL').get(function (this: PostAttributes) {
 const PostModel = mongoose.model('Post', postModelSchema);
 
 export default PostModel;
+export { PostAttributes };

@@ -19,4 +19,5 @@ const categoryModelSchema = new Schema<CategoryAttributes>({
 const CategoryModel = mongoose.model('Category', categoryModelSchema);
 
 export default CategoryModel;
+export { CategoryAttributes };
 
