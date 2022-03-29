@@ -1,29 +1,33 @@
 [
     {
-        "_id": "624059385ad45d2a6c4a2b70",
         "firstName": "John",
         "lastName": "Doe",
+        "email": "johndoe@gmail.com",
+        "password": "$2b$10$wVD0cbPxz2M0OJg7M2QwFOCoGgu2c97h46RfZ0lGBXMXYI2MnsnSW",
         "gender": "M",
         "photo": null
     },
     {
-        "_id": "624059385ad45d2a6c4a2b71",
         "firstName": "Vicky",
         "lastName": "Hladynets",
+        "email": "vicky@gmail.com",
+        "password": "$2b$10$wVD0cbPxz2M0OJg7M2QwFOCoGgu2c97h46RfZ0lGBXMXYI2MnsnSW",
         "gender": "M",
         "photo": "/public/users/vicky-hladynets-C8Ta0gwPbQg-unsplash.jpg"
     },
     {
-        "_id": "624059385ad45d2a6c4a2b72",
         "firstName": "Christina",
         "lastName": "Hailand",
+        "email": "christina@gmail.com",
+        "password": "$2b$10$wVD0cbPxz2M0OJg7M2QwFOCoGgu2c97h46RfZ0lGBXMXYI2MnsnSW",
         "gender": "F",
         "photo": "/public/users/christina-wocintechchat-com-0Zx1bDv5BNY-unsplash.jpg"
     },
     {
-        "_id": "624059385ad45d2a6c4a2b73",
         "firstName": "Craig",
         "lastName": "McKay",
+        "email": "craig@gmail.com",
+        "password": "$2b$10$wVD0cbPxz2M0OJg7M2QwFOCoGgu2c97h46RfZ0lGBXMXYI2MnsnSW",
         "gender": "M",
         "photo": "/public/users/craig-mckay-jmURdhtm7Ng-unsplash.jpg"
     }
