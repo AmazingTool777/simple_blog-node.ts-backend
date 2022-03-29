@@ -45,7 +45,14 @@ class UsersController {
 
 
     // Signs up a user
-
+    static async signupUser(req: Request, res: Response, next: NextFunction) {
+        try {
+            res.send('User signed up');
+        }
+        catch (error) {
+            next(error);
+        }
+    }
 
 }
 

@@ -1,4 +1,5 @@
 import path from "path";
+import cors from "cors";
 import express, { ErrorRequestHandler, Request, Response, NextFunction } from "express";
 
 // App error
@@ -7,8 +8,18 @@ import AppError from "./@types/AppError-class";
 // Controllers
 import UsersController from "./controllers/users-controller";
 
+// Middlewares
+import validateSignupUser from "./middlewares/validateSignupUser-middle";
+
 // Express application
 const app = express();
+
+// Handling CORS
+app.use(cors());
+
+// Body parser
+app.use(express.json());
+app.use(express.urlencoded({ extended: false }));
 
 
 /*
@@ -23,6 +34,9 @@ app.get('/api/users', UsersController.getUsers);
 
 // Gets a user
 app.get('/api/users/:userId', UsersController.getUser);
+
+// Signs up a user
+app.post('/api/signup', validateSignupUser, UsersController.signupUser);
 
 /*
 ** ***********************************************************************************
