@@ -14,6 +14,9 @@ import paginatedFind from "../helpers/paginatedFind-helper";
 // JWT helper methods
 import { jwtSign } from "../helpers/jwt-helper";
 
+// User photo config
+import { usersPhotoConfig } from "../configs/photos-config";
+
 // Users controller class
 class UsersController {
 
@@ -68,6 +71,25 @@ class UsersController {
             const token = await jwtSign({ userdId: addedUser._id }, "user", 3600 * 24);
 
             res.send({ token, user: addedUser });
+        }
+        catch (error) {
+            next(error);
+        }
+    }
+
+
+    // Updates a user's photo
+    static async updateUserPhoto(req: Request, res: Response, next: NextFunction) {
+        try {
+            // Searching if the user exists
+            const user = await UserModel.findById(req.params.userId);
+            if (!user) return next(new AppError(404, "The user does not exist"));
+
+            // Updating the user's photo
+            user.photoPath = `${usersPhotoConfig.urlPath}/${req.file?.filename}`;
+            await user.save();
+
+            res.json({ photoURL: user.photoURL });
         }
         catch (error) {
             next(error);
