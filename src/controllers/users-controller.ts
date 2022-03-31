@@ -85,11 +85,15 @@ class UsersController {
             const user = await UserModel.findById(req.params.userId);
             if (!user) return next(new AppError(404, "The user does not exist"));
 
+            // Is deletion
+            const isDeletion = req.method === "DELETE";
+
             // Updating the user's photo
-            user.photoPath = `${usersPhotoConfig.urlPath}/${req.file?.filename}`;
+            user.photoPath = isDeletion ? null : `${usersPhotoConfig.urlPath}/${req.file?.filename}`;
             await user.save();
 
-            res.json({ photoURL: user.photoURL });
+            if (isDeletion) res.sendStatus(204);
+            else res.json({ photoURL: user.photoURL });
         }
         catch (error) {
             next(error);
