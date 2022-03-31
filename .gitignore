@@ -3,3 +3,6 @@
 
 # Distributable source code
 /dist
+
+# Static files
+/src/static
