@@ -1,5 +1,6 @@
 import { Request, Response, NextFunction } from "express";
 import { FilterQuery } from "mongoose";
+import bcrypt from "bcrypt";
 
 // App error class
 import AppError from "../@types/AppError-class";
@@ -9,6 +10,9 @@ import UserModel, { UserAttributes } from "../models/user-model";
 
 // Paginated find
 import paginatedFind from "../helpers/paginatedFind-helper";
+
+// JWT helper methods
+import { jwtSign } from "../helpers/jwt-helper";
 
 // Users controller class
 class UsersController {
@@ -44,10 +48,26 @@ class UsersController {
     }
 
 
-    // Signs up a user
+    // Signs up a user *****************************************************************
     static async signupUser(req: Request, res: Response, next: NextFunction) {
         try {
-            res.send('User signed up');
+            // Getting the hashed password
+            const hashedPassword = await bcrypt.hash(req.body.password as string, 10);
+
+            // Storing the user to db
+            const newUserDocument = new UserModel({
+                firstName: req.body.firstName as string,
+                lastName: req.body.lastName as string,
+                gender: req.body.gender as string,
+                email: req.body.email as string,
+                password: hashedPassword,
+            });
+            const addedUser = await newUserDocument.save();
+
+            // Signing the user with JWT
+            const token = await jwtSign({ userdId: addedUser._id }, "user", 3600 * 24);
+
+            res.send({ token, user: addedUser });
         }
         catch (error) {
             next(error);
