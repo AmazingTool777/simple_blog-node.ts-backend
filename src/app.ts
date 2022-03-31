@@ -10,6 +10,7 @@ import UsersController from "./controllers/users-controller";
 
 // Middlewares
 import validateSignupUser from "./middlewares/validateSignupUser-middle";
+import validateUpdateUser from "./middlewares/validateUpdateUser-middle";
 import uploadUserPhoto from "./middlewares/uploadUserPhoto-middle";
 
 // Express application
@@ -41,6 +42,9 @@ app.post('/api/signup', validateSignupUser, UsersController.signupUser);
 
 // Updates a user's photo
 app.put("/api/users/:userId/photo", uploadUserPhoto, UsersController.updateUserPhoto);
+
+// Updates a user's data
+app.put("/api/users/:userId", validateUpdateUser, UsersController.updateUser);
 
 /*
 ** ***********************************************************************************

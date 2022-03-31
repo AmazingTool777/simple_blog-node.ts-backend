@@ -96,6 +96,25 @@ class UsersController {
         }
     }
 
+    // Udpates a user's data
+    static async updateUser(req: Request, res: Response, next: NextFunction) {
+        try {
+            // Finding the user
+            const user = await UserModel.findOne({ _id: req.params.userId });
+            if (!user) return next(new AppError(404, "The user does not exist"));
+            // Updating the user
+            user.firstName = req.body.firstName;
+            user.lastName = req.body.lastName;
+            user.email = req.body.email;
+            await user.save();
+
+            res.json(user);
+        }
+        catch (error) {
+            next(error);
+        }
+    }
+
 }
 
 export default UsersController;
