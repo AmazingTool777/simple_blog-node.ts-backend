@@ -14,6 +14,9 @@ import paginatedFind from "../helpers/paginatedFind-helper";
 // JWT helper methods
 import { jwtSign } from "../helpers/jwt-helper";
 
+// Api photo deleter
+import deleteApiPhoto from "../helpers/deleteApiPhoto-helper";
+
 // User photo config
 import { usersPhotoConfig } from "../configs/photos-config";
 
@@ -85,6 +88,9 @@ class UsersController {
             const user = await UserModel.findById(req.params.userId);
             if (!user) return next(new AppError(404, "The user does not exist"));
 
+            // Deleting user photo from files
+            if (user.photoPath) deleteApiPhoto(usersPhotoConfig.storagePath, user.photoPath);
+
             // Is deletion
             const isDeletion = req.method === "DELETE";
 
@@ -99,6 +105,7 @@ class UsersController {
             next(error);
         }
     }
+
 
     // Udpates a user's data
     static async updateUser(req: Request, res: Response, next: NextFunction) {
