@@ -8,6 +8,7 @@ interface PostAttributes {
     title: string,
     content: string,
     photoPath: string,
+    photoURL: string,
     categories: Types.ObjectId[],
     author: Types.ObjectId
 }

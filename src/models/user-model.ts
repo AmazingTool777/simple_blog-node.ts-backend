@@ -11,6 +11,7 @@ interface UserAttributes {
     email: string,
     password: string,
     photoPath?: string | null,
+    photoURL?: string | null,
     posts: Types.ObjectId[]
 }
 
