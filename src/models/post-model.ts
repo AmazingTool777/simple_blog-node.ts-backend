@@ -37,11 +37,12 @@ const postModelSchema = new Schema<PostAttributes>(
             type: Schema.Types.ObjectId,
             required: true,
             ref: "User"
-        }
+        },
     },
     {
         toObject: { virtuals: true },
         toJSON: { virtuals: true },
+        timestamps: true
     }
 );
 

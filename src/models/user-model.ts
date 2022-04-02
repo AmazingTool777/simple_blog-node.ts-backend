@@ -43,6 +43,7 @@ const userModelSchema = new Schema<UserAttributes>(
     {
         toObject: { virtuals: true },
         toJSON: { virtuals: true },
+        timestamps: true
     }
 );
 
