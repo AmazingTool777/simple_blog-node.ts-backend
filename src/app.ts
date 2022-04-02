@@ -7,6 +7,7 @@ import AppError from "./@types/AppError-class";
 
 // Controllers
 import UsersController from "./controllers/users-controller";
+import PostsController from "./controllers/posts-controller";
 
 // Middlewares
 import validateSignupUser from "./middlewares/validateSignupUser-middle";
@@ -51,6 +52,9 @@ app.delete("/api/users/:userId/photo", UsersController.updateUserPhoto);
 
 // Logs in a user
 app.post('/api/login', UsersController.login);
+
+// Gets posts under pagination
+app.get('/api/posts', PostsController.getPaginatedPosts);
 
 /*
 ** ***********************************************************************************
