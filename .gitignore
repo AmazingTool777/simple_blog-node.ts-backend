@@ -6,3 +6,6 @@
 
 # Static files
 /src/static
+
+# VS code settings
+/.vscode
