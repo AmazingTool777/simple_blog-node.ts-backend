@@ -56,6 +56,9 @@ app.post('/api/login', UsersController.login);
 // Gets posts under pagination
 app.get('/api/posts', PostsController.getPaginatedPosts);
 
+// Gets a post
+app.get('/api/posts/:postId', PostsController.getPost);
+
 /*
 ** ***********************************************************************************
 */
