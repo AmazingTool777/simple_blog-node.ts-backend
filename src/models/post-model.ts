@@ -31,7 +31,7 @@ const postModelSchema = new Schema<PostAttributes>(
         categories: [{
             type: Schema.Types.ObjectId,
             required: true,
-            // ref: "Category"
+            ref: "Category"
         }],
         author: {
             type: Schema.Types.ObjectId,
