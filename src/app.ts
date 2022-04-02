@@ -8,11 +8,13 @@ import AppError from "./@types/AppError-class";
 // Controllers
 import UsersController from "./controllers/users-controller";
 import PostsController from "./controllers/posts-controller";
+import CategoriesController from "./controllers/categories-controller";
 
 // Middlewares
 import validateSignupUser from "./middlewares/validateSignupUser-middle";
 import validateUpdateUser from "./middlewares/validateUpdateUser-middle";
 import uploadUserPhoto from "./middlewares/uploadUserPhoto-middle";
+import { authenticateRouteUser } from "./middlewares/routeAuth-middle";
 
 // Express application
 const app = express();
@@ -58,6 +60,12 @@ app.get('/api/posts', PostsController.getPaginatedPosts);
 
 // Gets a post
 app.get('/api/posts/:postId', PostsController.getPost);
+
+// Adds a post
+app.post('/api/posts', authenticateRouteUser, PostsController.addPost);
+
+// Gets categories
+app.get('/api/categories', CategoriesController.getCategories);
 
 /*
 ** ***********************************************************************************

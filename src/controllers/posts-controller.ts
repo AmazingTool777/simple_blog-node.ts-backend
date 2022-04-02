@@ -34,9 +34,22 @@ class PostsController {
     // Gets a post *********************************************************************
     static async getPost(req: Request, res: Response, next: NextFunction) {
         try {
-            const post = await PostModel.findById(req.params.postId).populate("author", "_id firstName lastName gender photoPath").populate("categories");
+            const post = await PostModel.findById(req.params.postId).populate("author", "_id firstName lastName gender photoPath").populate("categories", "-posts");
             if (!post) return next(new AppError(404, "The post is not found"));
             res.json(post);
+        }
+        catch (error) {
+            next(error);
+        }
+    }
+
+
+    // Adds a post *********************************************************************
+    static async addPost(req: Request, res: Response, next: NextFunction) {
+        try {
+            const { userId } = res.locals.authUser;
+            console.log(userId);
+            res.send('Posts added!');
         }
         catch (error) {
             next(error);
