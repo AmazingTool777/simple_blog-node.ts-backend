@@ -126,6 +126,39 @@ class UsersController {
         }
     }
 
+
+    // Logs in a user
+    static async login(req: Request, res: Response, next: NextFunction) {
+        try {
+            // Making sure that the email and the password field are not empty
+            if (!req.body.email) return next(new AppError(400, 'Email must not be empty'));
+            if (!req.body.password) return next(new AppError(400, 'Password must not be empty'));
+
+            const errorMessage = "The email or password is wrong"
+
+            // Finding users having the email
+            const usersHavingEmail = await UserModel.find({ email: req.body.email }).select("-__v");
+
+            // Searching if there's any password match
+            let n = usersHavingEmail.length;
+            if (n === 0) return next(new AppError(400, errorMessage));
+            for (let i = 0; i < n; i++) {
+                const userHavingEmail = usersHavingEmail[i];
+                if (await bcrypt.compare(req.body.password, userHavingEmail.password)) {
+                    // Token
+                    const token = await jwtSign({ userId: userHavingEmail._id }, "user", 3600 * 24);
+
+                    return res.json({ token, user: userHavingEmail });
+                }
+            }
+
+            next(new AppError(400, errorMessage));
+        }
+        catch (error) {
+            next(error);
+        }
+    }
+
 }
 
 export default UsersController;
