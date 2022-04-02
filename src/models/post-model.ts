@@ -28,11 +28,16 @@ const postModelSchema = new Schema<PostAttributes>(
             type: String,
             required: true
         },
-        categories: {
-            type: [Schema.Types.ObjectId],
-            required: true
-        },
-        author: Schema.Types.ObjectId
+        categories: [{
+            type: Schema.Types.ObjectId,
+            required: true,
+            // ref: "Category"
+        }],
+        author: {
+            type: Schema.Types.ObjectId,
+            required: true,
+            ref: "User"
+        }
     },
     {
         toObject: { virtuals: true },
