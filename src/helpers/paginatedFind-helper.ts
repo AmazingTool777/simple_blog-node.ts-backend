@@ -23,6 +23,7 @@ async function paginatedFind<ModelAttributes>(model: Model<ModelAttributes>, pag
         pages,
         rows: await model.find(options.filter)
             .skip((page - 1) * limit)
+            .limit(limit)
             .select(options.projection)
             .sort(options.sort)
     }
