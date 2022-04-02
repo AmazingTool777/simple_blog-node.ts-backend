@@ -10,6 +10,8 @@ interface PaginatedResults<ModelAttributes> {
 // Interface for the query options
 interface QueryOptions<ModelAttributes> {
     filter: FilterQuery<ModelAttributes>;
+    projection?: string,
+    sort?: string
 }
 
 // The find query paginator
@@ -19,7 +21,10 @@ async function paginatedFind<ModelAttributes>(model: Model<ModelAttributes>, pag
     return {
         count,
         pages,
-        rows: await model.find(options.filter).skip((page - 1) * limit)
+        rows: await model.find(options.filter)
+            .skip((page - 1) * limit)
+            .select(options.projection)
+            .sort(options.sort)
     }
 }
 
