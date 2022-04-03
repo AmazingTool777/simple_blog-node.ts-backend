@@ -14,6 +14,7 @@ import CategoriesController from "./controllers/categories-controller";
 import validateSignupUser from "./middlewares/validateSignupUser-middle";
 import validateUpdateUser from "./middlewares/validateUpdateUser-middle";
 import uploadUserPhoto from "./middlewares/uploadUserPhoto-middle";
+import validatePost from "./middlewares/validatePost-middle";
 import { authenticateRouteUser } from "./middlewares/routeAuth-middle";
 
 // Express application
@@ -62,7 +63,7 @@ app.get('/api/posts', PostsController.getPaginatedPosts);
 app.get('/api/posts/:postId', PostsController.getPost);
 
 // Adds a post
-app.post('/api/posts', authenticateRouteUser, PostsController.addPost);
+app.post('/api/posts', authenticateRouteUser, validatePost, PostsController.addPost);
 
 // Gets categories
 app.get('/api/categories', CategoriesController.getCategories);
@@ -81,7 +82,7 @@ const requestErrorHandler: ErrorRequestHandler = (err, req, res, next) => {
         if (err.payload) responseData.payload = err.payload;
         return res.status(err.status).json(responseData);
     }
-    next();
+    next(err);
 }
 app.use(requestErrorHandler);
 
