@@ -13,7 +13,7 @@ import CategoriesController from "./controllers/categories-controller";
 // Middlewares
 import validateSignupUser from "./middlewares/validateSignupUser-middle";
 import validateUpdateUser from "./middlewares/validateUpdateUser-middle";
-import validatePost from "./middlewares/validatePost-middle";
+import validatePost, { validatePostTitleContentUpdate } from "./middlewares/validatePost-middle";
 import uploadUserPhoto from "./middlewares/uploadUserPhoto-middle";
 import uploadPostPhoto from "./middlewares/uploadPostPhoto-middle";
 import { authenticateRouteUser } from "./middlewares/routeAuth-middle";
@@ -67,7 +67,7 @@ app.get('/api/posts/:postId', PostsController.getPost);
 app.post('/api/posts', authenticateRouteUser, uploadPostPhoto, validatePost, PostsController.addPost);
 
 // Updates a post's title and content
-app.put('/api/posts/:postId/text', authenticateRouteUser, PostsController.updatePostTitleAndContent);
+app.put('/api/posts/:postId/text', authenticateRouteUser, validatePostTitleContentUpdate, PostsController.updatePostTitleAndContent);
 
 // Gets categories
 app.get('/api/categories', CategoriesController.getCategories);

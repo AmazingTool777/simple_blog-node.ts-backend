@@ -24,14 +24,35 @@ const postSchema: Schema = {
     }
 };
 
+// Post title and content update validation schema
+const postTitleContentValidationSchema: Schema = {
+    title: postSchema.title,
+    content: postSchema.content,
+    postId: {
+        in: "params",
+        isMongoId: true,
+        errorMessage: "The post id is not in a valid mongoDB id format"
+    }
+}
+
+// Validation result handler middleware
+const validationResultHandler = (req: Request, res: Response, next: NextFunction) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) next(new AppError(400, "There are wrong values", errors.array()));
+    else next();
+}
+
 // Post validator middleware
 const validatePost: Middleware[] = [
     ...checkSchema(postSchema),
-    (req: Request, res: Response, next: NextFunction) => {
-        const errors = validationResult(req);
-        if (!errors.isEmpty()) next(new AppError(400, "There are wrong values", errors.array()));
-        else next();
-    }
+    validationResultHandler
+];
+
+// Post title and content update validation middleware
+const validatePostTitleContentUpdate = [
+    ...checkSchema(postTitleContentValidationSchema),
+    validationResultHandler
 ];
 
 export default validatePost;
+export { validatePostTitleContentUpdate };
