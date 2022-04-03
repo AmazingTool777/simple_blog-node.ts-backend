@@ -19,6 +19,14 @@ const categoryModelSchema = new Schema<CategoryAttributes>({
     }]
 });
 
+// Virtual for counting the associated posts to a category
+categoryModelSchema.virtual('postsNb', {
+    ref: 'Post',
+    localField: 'posts',
+    foreignField: '_id',
+    count: true
+});
+
 // Category model
 const CategoryModel = mongoose.model('Category', categoryModelSchema);
 
