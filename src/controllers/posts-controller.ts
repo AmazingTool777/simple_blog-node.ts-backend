@@ -92,6 +92,17 @@ class PostsController {
         }
     }
 
+
+    // Updates a post's title and content **********************************************
+    static async updatePostTitleAndContent(req: Request, res: Response, next: NextFunction) {
+        try {
+            res.send("Post's title and content updated");
+        }
+        catch (error) {
+            next(error);
+        }
+    }
+
 }
 
 export default PostsController;
