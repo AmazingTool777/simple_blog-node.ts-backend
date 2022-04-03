@@ -120,7 +120,49 @@ class PostsController {
     // Updates a post's categories *****************************************************
     static async updatePostCategories(req: Request, res: Response, next: NextFunction) {
         try {
-            res.send("Post's categories updated");
+            const { userId } = res.locals.authUser;
+            const { postId } = req.params;
+
+            const post = await PostModel.findById(postId);
+            if (!post) return next(new AppError(404, "The post does not exist"));
+
+            if (post.author.toString() !== userId)
+                return next(new AppError(403, "You are not allowed to edit this post"));
+
+            // Removing the post's id in each of the post's category document
+            const categoriesNb = post.categories.length;
+            for (let i = 0; i < categoriesNb; i++) {
+                const category = await CategoryModel.findById(post.categories[i]);
+                if (category) {
+                    category.posts = category.posts.filter(postId => postId.toString() !== post._id.toString());
+                    await category.save();
+                }
+            }
+
+            // Checks if there are new categories that already exist
+            const checkExistingNewCategories = await Promise.allSettled((req.body.newCategories as string[]).map(label => {
+                return CategoryModel.findOne({ label: new RegExp(label, "i") });
+            }));
+            // Distinguishing the already existing categories and the non-existing ones
+            const existingCategories: Types.ObjectId[] = [];
+            const nonExistingCategories: string[] = [];
+            checkExistingNewCategories.forEach((result, i) => {
+                if (result.status === "fulfilled") {
+                    if (result.value) existingCategories.push(result.value._id);
+                    else nonExistingCategories.push(req.body.newCategories[i]);
+                }
+                else nonExistingCategories.push(req.body.newCategories[i]);
+            });
+            // Storing the non-existing categories
+            const addedCategories = await CategoryModel.insertMany(nonExistingCategories.map(label => ({ label, posts: [post._id] })));
+
+            // Setting the final categories for the post
+            post.categories = [... new Set<Types.ObjectId>([...(req.body.categories as Types.ObjectId[]), ...existingCategories]), ...addedCategories.map(({ _id }) => _id)];
+
+            // Saving the post to db
+            await post.save();
+
+            res.send(post);
         }
         catch (error) {
             next(error);
