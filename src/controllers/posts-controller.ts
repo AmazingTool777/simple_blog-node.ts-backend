@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from "express";
-import { FilterQuery, Document, Types } from "mongoose";
+import { FilterQuery, Types } from "mongoose";
 
 // App error class
 import AppError from "../@types/AppError-class";
@@ -96,7 +96,20 @@ class PostsController {
     // Updates a post's title and content **********************************************
     static async updatePostTitleAndContent(req: Request, res: Response, next: NextFunction) {
         try {
-            res.send("Post's title and content updated");
+            const { userId } = res.locals.authUser;
+            const { postId } = req.params;
+
+            const post = await PostModel.findById(postId);
+            if (!post) return next(new AppError(404, "The post does not exist"));
+
+            if (post.author.toString() !== userId)
+                return next(new AppError(403, "You are not allowed to edit this post"));
+
+            post.title = req.body.title;
+            post.content = req.body.content;
+            await post.save();
+
+            res.send(post);
         }
         catch (error) {
             next(error);
