@@ -7,17 +7,23 @@ interface CategoryAttributes {
 }
 
 // Schema for a category model
-const categoryModelSchema = new Schema<CategoryAttributes>({
-    label: {
-        type: String,
-        required: true,
-        unique: true
+const categoryModelSchema = new Schema<CategoryAttributes>(
+    {
+        label: {
+            type: String,
+            required: true,
+            unique: true
+        },
+        posts: [{
+            type: Schema.Types.ObjectId,
+            ref: "Post"
+        }]
     },
-    posts: [{
-        type: Schema.Types.ObjectId,
-        ref: "Post"
-    }]
-});
+    {
+        toJSON: { virtuals: true },
+        toObject: { virtuals: true },
+    }
+);
 
 // Virtual for counting the associated posts to a category
 categoryModelSchema.virtual('postsNb', {
