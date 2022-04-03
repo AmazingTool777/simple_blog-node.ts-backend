@@ -12,4 +12,10 @@ const usersPhotoConfig: PhotoConfig = {
     urlPath: "/public/users"
 }
 
-export { usersPhotoConfig };
+// Photo config for the posts'photos
+const postsPhotoConfig: PhotoConfig = {
+    storagePath: path.join(__dirname, "../", "static", "posts"),
+    urlPath: "/public/posts"
+}
+
+export { usersPhotoConfig, postsPhotoConfig };
