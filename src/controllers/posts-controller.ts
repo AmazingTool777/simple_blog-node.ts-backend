@@ -4,12 +4,13 @@ import { FilterQuery, Types } from "mongoose";
 // App error class
 import AppError from "../@types/AppError-class";
 
-// Paginated find
+// Helpers
 import paginatedFind from "../helpers/paginatedFind-helper";
+import deleteApiPhoto from "../helpers/deleteApiPhoto-helper";
 
 // Models
 import PostModel, { PostAttributes } from "../models/post-model";
-import CategoryModel, { CategoryAttributes } from "../models/category-model";
+import CategoryModel from "../models/category-model";
 
 // Posts photos config
 import { postsPhotoConfig } from "../configs/photos-config";
@@ -163,6 +164,42 @@ class PostsController {
             await post.save();
 
             res.send(post);
+        }
+        catch (error) {
+            next(error);
+        }
+    }
+
+
+    // Deletes a post
+    static async deletePost(req: Request, res: Response, next: NextFunction) {
+        try {
+            const { userId } = res.locals.authUser;
+            const { postId } = req.params;
+
+            const post = await PostModel.findById(postId);
+            if (!post) return next(new AppError(404, "The post does not exist"));
+
+            if (post.author.toString() !== userId)
+                return next(new AppError(403, "You are not allowed to delete this post"));
+
+            // Removing the post's id in each of the post's category document
+            const categoriesNb = post.categories.length;
+            for (let i = 0; i < categoriesNb; i++) {
+                const category = await CategoryModel.findById(post.categories[i]);
+                if (category) {
+                    category.posts = category.posts.filter(postId => postId.toString() !== post._id.toString());
+                    await category.save();
+                }
+            }
+
+            const photoPath = post.photoPath;
+
+            await post.delete();
+
+            deleteApiPhoto(postsPhotoConfig.storagePath, photoPath);
+
+            res.sendStatus(204);
         }
         catch (error) {
             next(error);

@@ -72,6 +72,9 @@ app.put('/api/posts/:postId/text', authenticateRouteUser, validatePostTitleConte
 // Updates a post's categories
 app.put('/api/posts/:postId/categories', authenticateRouteUser, validatePostCategoriesUpdate, PostsController.updatePostCategories);
 
+// Deletes a post
+app.delete('/api/posts/:postId', authenticateRouteUser, PostsController.deletePost);
+
 // Gets categories
 app.get('/api/categories', CategoriesController.getCategories);
 
