@@ -13,8 +13,9 @@ import CategoriesController from "./controllers/categories-controller";
 // Middlewares
 import validateSignupUser from "./middlewares/validateSignupUser-middle";
 import validateUpdateUser from "./middlewares/validateUpdateUser-middle";
-import uploadUserPhoto from "./middlewares/uploadUserPhoto-middle";
 import validatePost from "./middlewares/validatePost-middle";
+import uploadUserPhoto from "./middlewares/uploadUserPhoto-middle";
+import uploadPostPhoto from "./middlewares/uploadPostPhoto-middle";
 import { authenticateRouteUser } from "./middlewares/routeAuth-middle";
 
 // Express application
@@ -63,7 +64,7 @@ app.get('/api/posts', PostsController.getPaginatedPosts);
 app.get('/api/posts/:postId', PostsController.getPost);
 
 // Adds a post
-app.post('/api/posts', authenticateRouteUser, validatePost, PostsController.addPost);
+app.post('/api/posts', authenticateRouteUser, uploadPostPhoto, validatePost, PostsController.addPost);
 
 // Gets categories
 app.get('/api/categories', CategoriesController.getCategories);
