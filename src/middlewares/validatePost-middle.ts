@@ -35,6 +35,12 @@ const postTitleContentValidationSchema: Schema = {
     }
 }
 
+// Post categories update schema
+const postCategoriesUpdateSchema: Schema = {
+    categories: postSchema.categories,
+    postId: postTitleContentValidationSchema.postId
+};
+
 // Validation result handler middleware
 const validationResultHandler = (req: Request, res: Response, next: NextFunction) => {
     const errors = validationResult(req);
@@ -54,5 +60,11 @@ const validatePostTitleContentUpdate = [
     validationResultHandler
 ];
 
+// Post categories update validation middleware
+const validatePostCategoriesUpdate = [
+    ...checkSchema(postCategoriesUpdateSchema),
+    validationResultHandler
+];
+
 export default validatePost;
-export { validatePostTitleContentUpdate };
+export { validatePostTitleContentUpdate, validatePostCategoriesUpdate };
