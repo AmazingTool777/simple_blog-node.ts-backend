@@ -13,7 +13,10 @@ const categoryModelSchema = new Schema<CategoryAttributes>({
         required: true,
         unique: true
     },
-    posts: [Schema.Types.ObjectId]
+    posts: [{
+        type: Schema.Types.ObjectId,
+        ref: "Post"
+    }]
 });
 
 // Category model
