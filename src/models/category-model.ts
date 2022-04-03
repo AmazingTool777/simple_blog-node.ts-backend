@@ -10,7 +10,8 @@ interface CategoryAttributes {
 const categoryModelSchema = new Schema<CategoryAttributes>({
     label: {
         type: String,
-        required: true
+        required: true,
+        unique: true
     },
     posts: [Schema.Types.ObjectId]
 });
