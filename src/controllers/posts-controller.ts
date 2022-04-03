@@ -116,6 +116,17 @@ class PostsController {
         }
     }
 
+
+    // Updates a post's categories *****************************************************
+    static async updatePostCategories(req: Request, res: Response, next: NextFunction) {
+        try {
+            res.send("Post's categories updated");
+        }
+        catch (error) {
+            next(error);
+        }
+    }
+
 }
 
 export default PostsController;

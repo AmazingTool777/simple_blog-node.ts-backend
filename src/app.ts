@@ -69,6 +69,9 @@ app.post('/api/posts', authenticateRouteUser, uploadPostPhoto, validatePost, Pos
 // Updates a post's title and content
 app.put('/api/posts/:postId/text', authenticateRouteUser, validatePostTitleContentUpdate, PostsController.updatePostTitleAndContent);
 
+// Updates a post's categories
+app.put('/api/posts/:postId/categories', authenticateRouteUser, PostsController.updatePostCategories);
+
 // Gets categories
 app.get('/api/categories', CategoriesController.getCategories);
 
