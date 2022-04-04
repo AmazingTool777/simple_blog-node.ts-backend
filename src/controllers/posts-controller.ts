@@ -23,8 +23,9 @@ class PostsController {
         try {
             const page = req.query.page ? parseInt(req.query.page as string) : 1;
             const limit = req.query.limit ? parseInt(req.query.limit as string) : 5;
+            const search = req.query.search ? decodeURI(req.query.search as string) : "";
             const filter: FilterQuery<PostAttributes> = {
-                title: new RegExp(decodeURI(req.query.search as string), "i")
+                title: new RegExp(search, "i")
             }
             const projection = "-categories";
             const sort = (!req.query.order || (req.query.order as string) === "asc" ? "" : "-") + "createdAt";

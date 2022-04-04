@@ -28,7 +28,7 @@ class UsersController {
         try {
             const page = parseInt(req.query.page as string);
             const limit = parseInt(req.query.limit as string);
-            const search = req.query.search as string;
+            const search = req.query.search ? decodeURI(req.query.search as string) : "";
             const filter: FilterQuery<UserAttributes> = {
                 $or: [{ firstName: new RegExp(search, "i") }, { lastName: new RegExp(search, "i") }]
             };
