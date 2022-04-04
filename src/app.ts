@@ -34,7 +34,7 @@ app.use(express.urlencoded({ extended: false }));
 */
 
 // Static files
-app.use('/public', express.static(path.join(__dirname, 'static')));
+app.use('/public', express.static(path.join(__dirname, "../", 'static')));
 
 // Gets users
 app.get('/api/users', UsersController.getUsers);
