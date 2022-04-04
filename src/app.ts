@@ -1,6 +1,6 @@
 import path from "path";
 import cors from "cors";
-import express, { ErrorRequestHandler, Request, Response, NextFunction } from "express";
+import express, { ErrorRequestHandler } from "express";
 
 // App error
 import AppError from "./@types/AppError-class";

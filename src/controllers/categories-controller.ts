@@ -1,9 +1,6 @@
 import { Request, Response, NextFunction } from "express";
 import { FilterQuery } from "mongoose";
 
-// App error class
-import AppError from "../@types/AppError-class";
-
 // Category model
 import CategoryModel, { CategoryAttributes } from "../models/category-model";
 
