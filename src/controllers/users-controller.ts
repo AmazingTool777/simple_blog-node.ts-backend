@@ -32,7 +32,8 @@ class UsersController {
             const filter: FilterQuery<UserAttributes> = {
                 $or: [{ firstName: new RegExp(search, "i") }, { lastName: new RegExp(search, "i") }]
             };
-            const paginatedUsers = await paginatedFind<UserAttributes>(UserModel, page, limit, { filter });
+            const sort = (!req.query.order || (req.query.order as string) === "asc" ? "" : "-") + "createdAt";
+            const paginatedUsers = await paginatedFind<UserAttributes>(UserModel, page, limit, { filter, sort });
             res.json(paginatedUsers);
         }
         catch (error) {
