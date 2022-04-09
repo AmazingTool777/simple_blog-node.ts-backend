@@ -165,7 +165,12 @@ class UsersController {
     // Gets a user from token
     static async getUserFromToken(req: Request, res: Response, next: NextFunction) {
         try {
-            res.send('User from token');
+            const { authUser } = res.locals;
+
+            const user = await UserModel.findOne({ _id: authUser.userId }).select('-password');
+            if (!user) return new AppError(404, "The user does not exist");
+
+            res.json(user);
         }
         catch (error) {
             next(error);
