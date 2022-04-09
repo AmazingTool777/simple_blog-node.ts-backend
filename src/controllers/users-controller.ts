@@ -32,8 +32,9 @@ class UsersController {
             const filter: FilterQuery<UserAttributes> = {
                 $or: [{ firstName: new RegExp(search, "i") }, { lastName: new RegExp(search, "i") }]
             };
+            const projection = "-password";
             const sort = (!req.query.order || (req.query.order as string) === "asc" ? "" : "-") + "createdAt";
-            const paginatedUsers = await paginatedFind<UserAttributes>(UserModel, page, limit, { filter, sort });
+            const paginatedUsers = await paginatedFind<UserAttributes>(UserModel, page, limit, { filter, sort, projection });
             res.json(paginatedUsers);
         }
         catch (error) {
@@ -45,7 +46,7 @@ class UsersController {
     // Gets a user *********************************************************************
     static async getUser(req: Request, res: Response, next: NextFunction) {
         try {
-            const user = await UserModel.findOne({ _id: req.params.userId });
+            const user = await UserModel.findOne({ _id: req.params.userId }).select('-password');
             if (!user) return next(new AppError(404, "The user is not found"));
             res.json(user);
         }
