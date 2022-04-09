@@ -161,6 +161,17 @@ class UsersController {
         }
     }
 
+
+    // Gets a user from token
+    static async getUserFromToken(req: Request, res: Response, next: NextFunction) {
+        try {
+            res.send('User from token');
+        }
+        catch (error) {
+            next(error);
+        }
+    }
+
 }
 
 export default UsersController;

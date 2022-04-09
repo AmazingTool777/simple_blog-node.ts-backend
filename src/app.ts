@@ -57,6 +57,9 @@ app.delete("/api/users/:userId/photo", UsersController.updateUserPhoto);
 // Logs in a user
 app.post('/api/login', UsersController.login);
 
+// Gets a user from token
+app.get('/api/tokenUser', authenticateRouteUser, UsersController.getUserFromToken);
+
 // Gets posts under pagination
 app.get('/api/posts', PostsController.getPaginatedPosts);
 
