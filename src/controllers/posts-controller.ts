@@ -27,7 +27,7 @@ class PostsController {
             const filter: FilterQuery<PostAttributes> = {
                 title: new RegExp(search, "i")
             }
-            const projection = "-categories";
+            const projection = "-categories -content";
             const sort = (!req.query.order || (req.query.order as string) === "asc" ? "" : "-") + "createdAt";
             const paginatedPosts = await paginatedFind<PostAttributes>(PostModel, page, limit, { filter, projection, sort });
             res.json(paginatedPosts);
