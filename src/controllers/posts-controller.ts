@@ -27,6 +27,8 @@ class PostsController {
             const filter: FilterQuery<PostAttributes> = {
                 title: new RegExp(search, "i")
             }
+            if (req.query.categoryId) filter.categories = req.query.categoryId as string;
+            if (req.query.authorId) filter.author = req.query.authorId as string;
             const projection = "-categories -content";
             const populate = { field: "author", projection: "_id firstName lastName gender photoPath" };
             const sort = (!req.query.order || (req.query.order as string) === "asc" ? "" : "-") + "createdAt";
