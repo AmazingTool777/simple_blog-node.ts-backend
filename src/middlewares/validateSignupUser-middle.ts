@@ -23,9 +23,7 @@ const signupUserSchema: Schema = {
         notEmpty: true,
         trim: true,
         toUpperCase: true,
-        isIn: {
-            options: ["M", "F"]
-        },
+        matches: /^[M|F]{1}$/,
         errorMessage: "Gender must be either 'M' or 'F'"
     },
     email: {

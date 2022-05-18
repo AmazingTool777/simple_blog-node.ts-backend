@@ -45,7 +45,7 @@ class DbConfig implements DbConfigAttributes {
 // Database config for development
 const development = new DbConfig({
     dbName: "simple-blog",
-    host: "localhost",
+    host: "127.0.0.1",
     port: 27017
 });
 

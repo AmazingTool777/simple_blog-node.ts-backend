@@ -167,8 +167,8 @@ class UsersController {
         try {
             const { authUser } = res.locals;
 
-            const user = await UserModel.findOne({ _id: authUser.userId }).select('-password');
-            if (!user) return new AppError(404, "The user does not exist");
+            const user = await UserModel.findOne({ _id: authUser.userdId }).select('-password');
+            if (!user) return next(new AppError(404, "The user does not exist"));
 
             res.json(user);
         }
