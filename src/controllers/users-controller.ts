@@ -73,7 +73,7 @@ class UsersController {
             const addedUser = await newUserDocument.save();
 
             // Signing the user with JWT
-            const token = await jwtSign({ userdId: addedUser._id }, "user", 3600 * 24);
+            const token = await jwtSign({ userId: addedUser._id }, "user", 3600 * 24);
 
             res.send({ token, user: addedUser });
         }
@@ -167,7 +167,7 @@ class UsersController {
         try {
             const { authUser } = res.locals;
 
-            const user = await UserModel.findOne({ _id: authUser.userdId }).select('-password');
+            const user = await UserModel.findOne({ _id: authUser.userId }).select('-password');
             if (!user) return next(new AppError(404, "The user does not exist"));
 
             res.json(user);
