@@ -60,6 +60,8 @@ class PostsController {
             const { userId } = res.locals.authUser;
             const photoFilename = req.file?.filename;
 
+            console.log(req.body);
+
             // Creating the new post document
             const post = new PostModel({
                 title: req.body.title,
@@ -67,6 +69,9 @@ class PostsController {
                 photoPath: `${postsPhotoConfig.urlPath}/${photoFilename}`,
                 author: userId
             });
+            // Re-formatting the categories
+            if (!req.body.categories) req.body.categories = [];
+            if (!req.body.newCategories) req.body.newCategories = [];
 
             // Checks if there are new categories that already exist
             const checkExistingNewCategories = await Promise.allSettled((req.body.newCategories as string[]).map(label => {
