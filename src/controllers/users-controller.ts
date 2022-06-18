@@ -119,6 +119,7 @@ class UsersController {
             user.firstName = req.body.firstName;
             user.lastName = req.body.lastName;
             user.email = req.body.email;
+            user.gender = req.body.gender;
             await user.save();
 
             res.json(user);
