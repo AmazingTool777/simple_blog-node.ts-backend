@@ -219,6 +219,9 @@ class UsersController {
             if (user._id.toString() != authUser.userId)
                 return next(new AppError(403, "You're not allowed to delete this user"));
 
+            if (!(await bcrypt.compare(req.body.password, user.password)))
+                return next(new AppError(400, "Invalid password"));
+
             const userPosts = await PostModel.find({ author: user._id });
             await Promise.allSettled(userPosts.map(post => {
                 deleteApiPhoto(postsPhotoConfig.storagePath, post.photoPath);
