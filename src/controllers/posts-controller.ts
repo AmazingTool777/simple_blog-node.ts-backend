@@ -60,8 +60,6 @@ class PostsController {
             const { userId } = res.locals.authUser;
             const photoFilename = req.file?.filename;
 
-            console.log(req.body);
-
             // Creating the new post document
             const post = new PostModel({
                 title: req.body.title,
