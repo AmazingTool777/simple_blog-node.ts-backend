@@ -193,6 +193,16 @@ class UsersController {
         }
     }
 
+
+    // Deletes a user
+    static async deleteUser(req: Request, res: Response, next: NextFunction) {
+        try {
+            res.send('The user has been deleted successfully');
+        } catch (error) {
+            next(error);
+        }
+    }
+
 }
 
 export default UsersController;

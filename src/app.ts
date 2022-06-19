@@ -58,6 +58,9 @@ app.put("/api/users/:userId/password", validateUpdatePassword, UsersController.u
 // Deletes a user's photo
 app.delete("/api/users/:userId/photo", UsersController.updateUserPhoto);
 
+// Deletes a user
+app.delete("/api/users/:userId", authenticateRouteUser, UsersController.deleteUser);
+
 // Logs in a user
 app.post('/api/login', UsersController.login);
 
