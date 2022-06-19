@@ -50,13 +50,13 @@ app.post('/api/signup', validateSignupUser, UsersController.signupUser);
 app.put("/api/users/:userId/photo", uploadUserPhoto, UsersController.updateUserPhoto);
 
 // Updates a user's data
-app.put("/api/users/:userId", validateUpdateUser, UsersController.updateUser);
+app.put("/api/users/:userId", authenticateRouteUser, validateUpdateUser, UsersController.updateUser);
 
 // Updates a user's password
-app.put("/api/users/:userId/password", validateUpdatePassword, UsersController.updateUserPassword);
+app.put("/api/users/:userId/password", authenticateRouteUser, validateUpdatePassword, UsersController.updateUserPassword);
 
 // Deletes a user's photo
-app.delete("/api/users/:userId/photo", UsersController.updateUserPhoto);
+app.delete("/api/users/:userId/photo", authenticateRouteUser, UsersController.updateUserPhoto);
 
 // Deletes a user
 app.delete("/api/users/:userId", authenticateRouteUser, UsersController.deleteUser);

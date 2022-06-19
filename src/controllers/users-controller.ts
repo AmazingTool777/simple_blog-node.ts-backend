@@ -87,9 +87,13 @@ class UsersController {
     // Updates a user's photo
     static async updateUserPhoto(req: Request, res: Response, next: NextFunction) {
         try {
+            const { authUser } = res.locals;
+
             // Searching if the user exists
             const user = await UserModel.findById(req.params.userId);
             if (!user) return next(new AppError(404, "The user does not exist"));
+            if (user._id.toString() !== authUser.userId)
+                return next(new AppError(403, "You're not allowed to delete this user"));
 
             // Deleting user photo from files
             if (user.photoPath) deleteApiPhoto(usersPhotoConfig.storagePath, user.photoPath);
@@ -113,9 +117,12 @@ class UsersController {
     // Udpates a user's data
     static async updateUser(req: Request, res: Response, next: NextFunction) {
         try {
+            const { authUser } = res.locals;
             // Finding the user
             const user = await UserModel.findOne({ _id: req.params.userId });
             if (!user) return next(new AppError(404, "The user does not exist"));
+            if (user._id.toString() !== authUser.userId)
+                return next(new AppError(403, "You're not allowed to delete this user"));
             // Updating the user
             user.firstName = req.body.firstName;
             user.lastName = req.body.lastName;
@@ -134,8 +141,11 @@ class UsersController {
     // Updates a user's password
     static async updateUserPassword(req: Request, res: Response, next: NextFunction) {
         try {
+            const { authUser } = res.locals;
             const user = await UserModel.findById(req.params?.userId);
             if (!user) return next(new AppError(404, "The user does not exist"));
+            if (user._id.toString() !== authUser.userId)
+                return next(new AppError(403, "You're not allowed to delete this user"));
             const hashedPassword = await bcrypt.hash(req.body.password as string, 10);
             user.password = hashedPassword;
             await user.save();
