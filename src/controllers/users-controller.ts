@@ -5,8 +5,9 @@ import bcrypt from "bcrypt";
 // App error class
 import AppError from "../@types/AppError-class";
 
-// User model
+// Models
 import UserModel, { UserAttributes } from "../models/user-model";
+import PostModel from "../models/post-model";
 
 // Paginated find
 import paginatedFind from "../helpers/paginatedFind-helper";
@@ -18,7 +19,7 @@ import { jwtSign } from "../helpers/jwt-helper";
 import deleteApiPhoto from "../helpers/deleteApiPhoto-helper";
 
 // User photo config
-import { usersPhotoConfig } from "../configs/photos-config";
+import { usersPhotoConfig, postsPhotoConfig } from "../configs/photos-config";
 
 // Users controller class
 class UsersController {
@@ -201,13 +202,23 @@ class UsersController {
     static async deleteUser(req: Request, res: Response, next: NextFunction) {
         try {
             const { authUser } = res.locals;
+
             const user = await UserModel.findById(req.params?.userId);
+
             if (!user) return next(new AppError(404, "The user does not exist"));
             if (user._id.toString() != authUser.userId)
                 return next(new AppError(403, "You're not allowed to delete this user"));
+
+            const userPosts = await PostModel.find({ author: user._id });
+            await Promise.allSettled(userPosts.map(post => {
+                deleteApiPhoto(postsPhotoConfig.storagePath, post.photoPath);
+                return PostModel.deleteOne({ _id: post._id });
+            }))
+
             const photoPath = user.photoPath;
             await user.delete();
             if (photoPath) deleteApiPhoto(usersPhotoConfig.storagePath, photoPath);
+
             res.sendStatus(204);
         } catch (error) {
             next(error);
