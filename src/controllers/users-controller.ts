@@ -133,7 +133,12 @@ class UsersController {
     // Updates a user's password
     static async updateUserPassword(req: Request, res: Response, next: NextFunction) {
         try {
-            res.send("User's password updated");
+            const user = await UserModel.findById(req.params?.userId);
+            if (!user) return next(new AppError(404, "The user does not exist"));
+            const hashedPassword = await bcrypt.hash(req.body.password as string, 10);
+            user.password = hashedPassword;
+            await user.save();
+            res.json({ message: "User's password updated successfully" });
         } catch (error) {
             next(error);
         }
