@@ -197,7 +197,15 @@ class UsersController {
     // Deletes a user
     static async deleteUser(req: Request, res: Response, next: NextFunction) {
         try {
-            res.send('The user has been deleted successfully');
+            const { authUser } = res.locals;
+            const user = await UserModel.findById(req.params?.userId);
+            if (!user) return next(new AppError(404, "The user does not exist"));
+            if (user._id.toString() != authUser.userId)
+                return next(new AppError(403, "You're not allowed to delete this user"));
+            const photoPath = user.photoPath;
+            await user.delete();
+            if (photoPath) deleteApiPhoto(usersPhotoConfig.storagePath, photoPath);
+            res.sendStatus(204);
         } catch (error) {
             next(error);
         }
