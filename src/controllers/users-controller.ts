@@ -130,6 +130,16 @@ class UsersController {
     }
 
 
+    // Updates a user's password
+    static async updateUserPassword(req: Request, res: Response, next: NextFunction) {
+        try {
+            res.send("User's password updated");
+        } catch (error) {
+            next(error);
+        }
+    }
+
+
     // Logs in a user
     static async login(req: Request, res: Response, next: NextFunction) {
         try {

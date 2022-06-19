@@ -13,6 +13,7 @@ import CategoriesController from "./controllers/categories-controller";
 // Middlewares
 import validateSignupUser from "./middlewares/validateSignupUser-middle";
 import validateUpdateUser from "./middlewares/validateUpdateUser-middle";
+import validateUpdatePassword from "./middlewares/validateUpdatePassword-middle";
 import validatePost, { validatePostTitleContentUpdate, validatePostCategoriesUpdate } from "./middlewares/validatePost-middle";
 import uploadUserPhoto from "./middlewares/uploadUserPhoto-middle";
 import uploadPostPhoto from "./middlewares/uploadPostPhoto-middle";
@@ -50,6 +51,9 @@ app.put("/api/users/:userId/photo", uploadUserPhoto, UsersController.updateUserP
 
 // Updates a user's data
 app.put("/api/users/:userId", validateUpdateUser, UsersController.updateUser);
+
+// Updates a user's password
+app.put("/api/users/:userId/password", validateUpdatePassword, UsersController.updateUserPassword);
 
 // Deletes a user's photo
 app.delete("/api/users/:userId/photo", UsersController.updateUserPhoto);
