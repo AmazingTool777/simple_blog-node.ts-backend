@@ -1,34 +1,52 @@
-[
-    {
-        "firstName": "John",
-        "lastName": "Doe",
-        "email": "johndoe@gmail.com",
-        "password": "$2b$10$wVD0cbPxz2M0OJg7M2QwFOCoGgu2c97h46RfZ0lGBXMXYI2MnsnSW",
-        "gender": "M",
-        "photoPath": null
-    },
-    {
-        "firstName": "Vicky",
-        "lastName": "Hladynets",
-        "email": "vicky@gmail.com",
-        "password": "$2b$10$wVD0cbPxz2M0OJg7M2QwFOCoGgu2c97h46RfZ0lGBXMXYI2MnsnSW",
-        "gender": "M",
-        "photoPath": "/public/users/vicky-hladynets-C8Ta0gwPbQg-unsplash.jpg"
-    },
-    {
-        "firstName": "Christina",
-        "lastName": "Hailand",
-        "email": "christina@gmail.com",
-        "password": "$2b$10$wVD0cbPxz2M0OJg7M2QwFOCoGgu2c97h46RfZ0lGBXMXYI2MnsnSW",
-        "gender": "F",
-        "photoPath": "/public/users/christina-wocintechchat-com-0Zx1bDv5BNY-unsplash.jpg"
-    },
-    {
-        "firstName": "Craig",
-        "lastName": "McKay",
-        "email": "craig@gmail.com",
-        "password": "$2b$10$wVD0cbPxz2M0OJg7M2QwFOCoGgu2c97h46RfZ0lGBXMXYI2MnsnSW",
-        "gender": "M",
-        "photoPath": "/public/users/craig-mckay-jmURdhtm7Ng-unsplash.jpg"
-    }
-]
+[{
+  "_id": {
+    "$oid": "6242dafa2d811c2028e8fadb"
+  },
+  "firstName": "Vicky",
+  "lastName": "Hladynets",
+  "email": "vicky@gmail.com",
+  "password": "$2b$10$wVD0cbPxz2M0OJg7M2QwFOCoGgu2c97h46RfZ0lGBXMXYI2MnsnSW",
+  "gender": "M",
+  "photoPath": "/public/users/vicky-hladynets-C8Ta0gwPbQg-unsplash.jpg",
+  "createdAt": {
+    "$date": "2022-05-28T03:02:35.910Z"
+  }
+},{
+  "_id": {
+    "$oid": "6242dafa2d811c2028e8fadc"
+  },
+  "firstName": "Christina",
+  "lastName": "Hailand",
+  "email": "christina@gmail.com",
+  "password": "$2b$10$wVD0cbPxz2M0OJg7M2QwFOCoGgu2c97h46RfZ0lGBXMXYI2MnsnSW",
+  "gender": "F",
+  "photoPath": "/public/users/christina-wocintechchat-com-0Zx1bDv5BNY-unsplash.jpg",
+  "createdAt": {
+    "$date": "2022-05-28T03:02:35.910Z"
+  }
+},{
+  "_id": {
+    "$oid": "6242dafa2d811c2028e8fadd"
+  },
+  "firstName": "Craig",
+  "lastName": "McKay",
+  "email": "craig@gmail.com",
+  "password": "$2b$10$wVD0cbPxz2M0OJg7M2QwFOCoGgu2c97h46RfZ0lGBXMXYI2MnsnSW",
+  "gender": "M",
+  "photoPath": "/public/users/craig-mckay-jmURdhtm7Ng-unsplash.jpg",
+  "createdAt": {
+    "$date": "2022-05-28T03:02:35.910Z"
+  }
+},{
+  "_id": {
+    "$oid": "62af66d0eeda6dcae0f3d231"
+  },
+  "firstName": "John",
+  "lastName": "Doe",
+  "gender": "M",
+  "email": "johndoe@gmail.com",
+  "password": "$2b$10$dTcSS7hd1mA6EXfyWPuyUOwl8uiNB95qMbnn74C3QTc1L1v0N/BbS",
+  "createdAt": {
+    "$date": "2022-06-19T18:11:28.593Z"
+  }
+}]

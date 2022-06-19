@@ -1,23 +1,73 @@
-[
+[{
+  "_id": {
+    "$oid": "6242de532d811c2028e8fae3"
+  },
+  "title": "The joy of working from Home",
+  "photoPath": "/public/posts/nubelson-fernandes-Yh2Y8avvPec-unsplash.jpg",
+  "content": "Lorem ipsum dolor, sit amet consectetur adipisicing elit. Itaque perspiciatis ut voluptatum non recusandae repudiandae hic quod repellendus. Temporibus, ratione.",
+  "categories": [
     {
-        "title": "The joy of working from Home",
-        "photoPath": "/public/posts/nubelson-fernandes-Yh2Y8avvPec-unsplash.jpg",
-        "content": "Lorem ipsum dolor, sit amet consectetur adipisicing elit. Itaque perspiciatis ut voluptatum non recusandae repudiandae hic quod repellendus. Temporibus, ratione.",
-        "categories": [],
-        "author": null
+      "$oid": "6242dcfa2d811c2028e8fae1"
     },
     {
-        "title": "Bangladeshi foods' unique diversity",
-        "photoPath": "/public/posts/roam-in-color-lWjd2XSRTAQ-unsplash.jpg",
-        "content": "Lorem ipsum dolor, sit amet consectetur adipisicing elit. Itaque perspiciatis ut voluptatum non recusandae repudiandae hic quod repellendus. Temporibus, ratione.",
-        "categories": [],
-        "author": null
-    },
-    {
-        "title": "The negative effects of medias",
-        "photoPath": "/public/posts/somruthai-keawjan-NCSHHeuQ6Ac-unsplash.jpg",
-        "content": "Lorem ipsum dolor, sit amet consectetur adipisicing elit. Itaque perspiciatis ut voluptatum non recusandae repudiandae hic quod repellendus. Temporibus, ratione.",
-        "categories": [],
-        "author": null
+      "$oid": "6242dcfa2d811c2028e8fae2"
     }
-]
+  ],
+  "author": {
+    "$oid": "6242dafa2d811c2028e8fadc"
+  },
+  "createdAt": {
+    "$date": "2022-04-10T19:29:42.617Z"
+  },
+  "updatedAt": {
+    "$date": "2022-04-10T19:29:42.617Z"
+  }
+},{
+  "_id": {
+    "$oid": "6242de532d811c2028e8fae4"
+  },
+  "title": "Bangladeshi foods' unique diversity",
+  "photoPath": "/public/posts/roam-in-color-lWjd2XSRTAQ-unsplash.jpg",
+  "content": "Lorem ipsum dolor, sit amet consectetur adipisicing elit. Itaque perspiciatis ut voluptatum non recusandae repudiandae hic quod repellendus. Temporibus, ratione.",
+  "categories": [
+    {
+      "$oid": "6242dcfa2d811c2028e8fade"
+    },
+    {
+      "$oid": "6242dcfa2d811c2028e8fae0"
+    }
+  ],
+  "author": {
+    "$oid": "6242dafa2d811c2028e8fadb"
+  },
+  "createdAt": {
+    "$date": "2022-04-10T19:29:42.617Z"
+  },
+  "updatedAt": {
+    "$date": "2022-04-10T19:29:42.617Z"
+  }
+},{
+  "_id": {
+    "$oid": "6242de532d811c2028e8fae5"
+  },
+  "title": "The negative effects of medias",
+  "photoPath": "/public/posts/somruthai-keawjan-NCSHHeuQ6Ac-unsplash.jpg",
+  "content": "Lorem ipsum dolor, sit amet consectetur adipisicing elit. Itaque perspiciatis ut voluptatum non recusandae repudiandae hic quod repellendus. Temporibus, ratione.",
+  "categories": [
+    {
+      "$oid": "6242dcfa2d811c2028e8fade"
+    },
+    {
+      "$oid": "6242dcfa2d811c2028e8fadf"
+    }
+  ],
+  "author": {
+    "$oid": "6242dafa2d811c2028e8fadd"
+  },
+  "createdAt": {
+    "$date": "2022-04-10T19:29:13.367Z"
+  },
+  "updatedAt": {
+    "$date": "2022-04-10T19:29:13.367Z"
+  }
+}]

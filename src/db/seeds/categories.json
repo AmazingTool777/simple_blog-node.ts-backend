@@ -1,7 +1,156 @@
-[
-    { "label": "Culture", "posts": [] },
-    { "label": "Social", "posts": [] },
-    { "label": "Cuisine", "posts": [] },
-    { "label": "Covid-19", "posts": [] },
-    { "label": "Technology", "posts": [] }
-]
+[{
+  "_id": {
+    "$oid": "6242dcfa2d811c2028e8fade"
+  },
+  "label": "Culture",
+  "posts": [
+    {
+      "$oid": "6242de532d811c2028e8fae4"
+    },
+    {
+      "$oid": "6242de532d811c2028e8fae5"
+    }
+  ]
+},{
+  "_id": {
+    "$oid": "6242dcfa2d811c2028e8fadf"
+  },
+  "label": "Social",
+  "posts": [
+    {
+      "$oid": "6242de532d811c2028e8fae5"
+    }
+  ]
+},{
+  "_id": {
+    "$oid": "6242dcfa2d811c2028e8fae0"
+  },
+  "label": "Cuisine",
+  "posts": [
+    {
+      "$oid": "6242de532d811c2028e8fae4"
+    }
+  ]
+},{
+  "_id": {
+    "$oid": "6242dcfa2d811c2028e8fae1"
+  },
+  "label": "Covid-19",
+  "posts": [
+    {
+      "$oid": "6242de532d811c2028e8fae3"
+    }
+  ]
+},{
+  "_id": {
+    "$oid": "6242dcfa2d811c2028e8fae2"
+  },
+  "label": "Technology",
+  "posts": [
+    {
+      "$oid": "6242de532d811c2028e8fae3"
+    }
+  ]
+},{
+  "_id": {
+    "$oid": "6248971517aca2aff86d0441"
+  },
+  "label": "War",
+  "posts": []
+},{
+  "_id": {
+    "$oid": "6248974817aca2aff86d0442"
+  },
+  "label": "International",
+  "posts": []
+},{
+  "_id": {
+    "$oid": "6249629a8132be562c4ca92a"
+  },
+  "label": "Politics",
+  "posts": []
+},{
+  "_id": {
+    "$oid": "6249b46835312979868fb2ec"
+  },
+  "label": "Tourism",
+  "posts": []
+},{
+  "_id": {
+    "$oid": "6249b46835312979868fb2ed"
+  },
+  "label": "Travel",
+  "posts": []
+},{
+  "_id": {
+    "$oid": "6249ee19aca603451c283c92"
+  },
+  "label": "People",
+  "posts": [
+    {
+      "$oid": "6249b46835312979868fb2e9"
+    }
+  ]
+},{
+  "_id": {
+    "$oid": "6249ee19aca603451c283c93"
+  },
+  "label": "Asia",
+  "posts": [
+    {
+      "$oid": "6249b46835312979868fb2e9"
+    }
+  ]
+},{
+  "_id": {
+    "$oid": "628a8d339890ddcfb0f88d11"
+  },
+  "label": "Restaurants",
+  "posts": []
+},{
+  "_id": {
+    "$oid": "629f0b7c0248c8247a95b291"
+  },
+  "label": "Security",
+  "posts": []
+},{
+  "_id": {
+    "$oid": "629f0b7c0248c8247a95b292"
+  },
+  "label": "Economy",
+  "posts": []
+},{
+  "_id": {
+    "$oid": "62a8653d2a0edb902f833b68"
+  },
+  "label": "Poverty",
+  "posts": []
+},{
+  "_id": {
+    "$oid": "62a867442a0edb902f833b8c"
+  },
+  "label": "Countries",
+  "posts": []
+},{
+  "_id": {
+    "$oid": "62a877dc2a0edb902f833d3b"
+  },
+  "label": "Web development",
+  "posts": []
+},{
+  "_id": {
+    "$oid": "62a877dc2a0edb902f833d3c"
+  },
+  "label": "Frontend",
+  "posts": []
+},{
+  "_id": {
+    "$oid": "62af19ed6c5364cd7f59b78a"
+  },
+  "label": "Foods",
+  "posts": [
+    {
+      "$oid": "62af19ed6c5364cd7f59b788"
+    }
+  ]
+}]
