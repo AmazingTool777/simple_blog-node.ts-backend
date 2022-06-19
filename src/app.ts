@@ -47,7 +47,7 @@ app.get('/api/users/:userId', UsersController.getUser);
 app.post('/api/signup', validateSignupUser, UsersController.signupUser);
 
 // Updates a user's photo
-app.put("/api/users/:userId/photo", uploadUserPhoto, UsersController.updateUserPhoto);
+app.put("/api/users/:userId/photo", authenticateRouteUser, uploadUserPhoto, UsersController.updateUserPhoto);
 
 // Updates a user's data
 app.put("/api/users/:userId", authenticateRouteUser, validateUpdateUser, UsersController.updateUser);
