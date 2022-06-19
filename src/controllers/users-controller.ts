@@ -186,7 +186,10 @@ class UsersController {
             const user = await UserModel.findOne({ _id: authUser.userId }).select('-password');
             if (!user) return next(new AppError(404, "The user does not exist"));
 
-            res.json(user);
+            // Token
+            const token = await jwtSign({ userId: user._id }, "user", 3600 * 24);
+
+            res.json({ user, token });
         }
         catch (error) {
             next(error);
