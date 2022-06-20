@@ -49,4 +49,10 @@ const development = new DbConfig({
     port: 27017
 });
 
-export { development };
+// Database config for production
+const production = new DbConfig({
+    dbName: "simple-blog",
+    uri: process.env.ATLAS_DB_URI
+});
+
+export { development, production };
