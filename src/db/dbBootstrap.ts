@@ -4,7 +4,7 @@ import mongoose from "mongoose";
 import * as dbConfigs from "../configs/db-config";
 
 // Current database config
-const dbConfig = process.env.NODE_ENV ? dbConfigs.production : dbConfigs.development;
+const dbConfig = dbConfigs.production;
 
 // Connecting to mongodb
 const bootstrapDb = () => {
