@@ -19,8 +19,16 @@ const postSchema: Schema = {
     },
     categories: {
         isArray: true,
-        isMongoId: true,
-        errorMessage: "The values are not valid mongoDB ids"
+        optional: true,
+        isMongoId: {
+            errorMessage: "The values are not valid mongoDB ids"
+        },
+        custom: {
+            options(categories, { req }) {
+                if (categories.length === 0 && req.body.newCategories && req.body.newCategories.length === 0)
+                    throw new Error("You must provide at least 1 category");
+            }
+        }
     }
 };
 
