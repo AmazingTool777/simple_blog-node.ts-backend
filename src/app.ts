@@ -47,43 +47,43 @@ app.get('/api/users/:userId', UsersController.getUser);
 app.post('/api/signup', validateSignupUser, UsersController.signupUser);
 
 // Updates a user's photo
-app.put("/api/users/:userId/photo", authenticateRouteUser, uploadUserPhoto, UsersController.updateUserPhoto);
+app.put("/api/users/:userId/photo", authenticateRouteUser(), uploadUserPhoto, UsersController.updateUserPhoto);
 
 // Updates a user's data
-app.put("/api/users/:userId", authenticateRouteUser, validateUpdateUser, UsersController.updateUser);
+app.put("/api/users/:userId", authenticateRouteUser(), validateUpdateUser, UsersController.updateUser);
 
 // Updates a user's password
-app.put("/api/users/:userId/password", authenticateRouteUser, validateUpdatePassword, UsersController.updateUserPassword);
+app.put("/api/users/:userId/password", authenticateRouteUser(), validateUpdatePassword, UsersController.updateUserPassword);
 
 // Deletes a user's photo
-app.delete("/api/users/:userId/photo", authenticateRouteUser, UsersController.updateUserPhoto);
+app.delete("/api/users/:userId/photo", authenticateRouteUser(), UsersController.updateUserPhoto);
 
 // Deletes a user
-app.delete("/api/users/:userId", authenticateRouteUser, UsersController.deleteUser);
+app.delete("/api/users/:userId", authenticateRouteUser(), UsersController.deleteUser);
 
 // Logs in a user
 app.post('/api/login', UsersController.login);
 
 // Gets a user from token
-app.get('/api/tokenUser', authenticateRouteUser, UsersController.getUserFromToken);
+app.get('/api/tokenUser', authenticateRouteUser(), UsersController.getUserFromToken);
 
 // Gets posts under pagination
 app.get('/api/posts', PostsController.getPaginatedPosts);
 
 // Gets a post
-app.get('/api/posts/:postId', PostsController.getPost);
+app.get('/api/posts/:postId', authenticateRouteUser(false), PostsController.getPost);
 
 // Adds a post
-app.post('/api/posts', authenticateRouteUser, uploadPostPhoto, validatePost, PostsController.addPost);
+app.post('/api/posts', authenticateRouteUser(), uploadPostPhoto, validatePost, PostsController.addPost);
 
 // Updates a post's title and content
-app.put('/api/posts/:postId/text', authenticateRouteUser, validatePostTitleContentUpdate, PostsController.updatePostTitleAndContent);
+app.put('/api/posts/:postId/text', authenticateRouteUser(), validatePostTitleContentUpdate, PostsController.updatePostTitleAndContent);
 
 // Updates a post's categories
-app.put('/api/posts/:postId/categories', authenticateRouteUser, validatePostCategoriesUpdate, PostsController.updatePostCategories);
+app.put('/api/posts/:postId/categories', authenticateRouteUser(), validatePostCategoriesUpdate, PostsController.updatePostCategories);
 
 // Deletes a post
-app.delete('/api/posts/:postId', authenticateRouteUser, PostsController.deletePost);
+app.delete('/api/posts/:postId', authenticateRouteUser(), PostsController.deletePost);
 
 // Gets categories
 app.get('/api/categories', CategoriesController.getCategories);
