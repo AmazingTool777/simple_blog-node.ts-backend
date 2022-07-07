@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from "express";
-import { FilterQuery, Types } from "mongoose";
+import mongoose, { FilterQuery, Types, ObjectId } from "mongoose";
 
 // App error class
 import AppError from "../@types/AppError-class";
@@ -11,6 +11,7 @@ import deleteApiPhoto from "../helpers/deleteApiPhoto-helper";
 // Models
 import PostModel, { PostAttributes } from "../models/post-model";
 import CategoryModel from "../models/category-model";
+import LikeModel from "../models/like-model";
 
 // Posts photos config
 import { postsPhotoConfig } from "../configs/photos-config";
@@ -29,7 +30,7 @@ class PostsController {
             }
             if (req.query.categoryId) filter.categories = req.query.categoryId as string;
             if (req.query.authorId) filter.author = req.query.authorId as string;
-            const projection = "-categories -content";
+            const projection = "-categories -content -likes";
             const populate = { field: "author", projection: "_id firstName lastName gender photoPath" };
             const sort = (!req.query.order || (req.query.order as string) === "asc" ? "" : "-") + "createdAt";
             const paginatedPosts = await paginatedFind<PostAttributes>(PostModel, page, limit, { filter, projection, sort, populate });
@@ -44,9 +45,26 @@ class PostsController {
     // Gets a post *********************************************************************
     static async getPost(req: Request, res: Response, next: NextFunction) {
         try {
-            const post = await PostModel.findById(req.params.postId).populate("author", "_id firstName lastName gender photoPath").populate("categories", "-posts");
+            const { authUser } = res.locals;
+
+            const post = await PostModel.findById(req.params.postId, "-likes")
+                .populate("author", "_id firstName lastName gender photoPath")
+                .populate("categories", "-posts");
+
             if (!post) return next(new AppError(404, "The post is not found"));
-            res.json(post);
+
+            const likesCount = await LikeModel.count({ post: post._id });
+
+            let like;
+            if (authUser) like = await LikeModel.findOne({ user: authUser._id });
+
+            const responseData: any = {
+                ...post.toJSON(),
+                likesCount,
+            }
+            if (authUser) responseData.like = like;
+
+            res.json(responseData);
         }
         catch (error) {
             next(error);
