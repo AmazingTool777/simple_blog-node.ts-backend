@@ -37,14 +37,14 @@ app.use(express.urlencoded({ extended: false }));
 // Static files
 app.use('/public', express.static(path.join(__dirname, "../", 'static')));
 
+
+/* USERS ************************************************************/
+
 // Gets users
 app.get('/api/users', UsersController.getUsers);
 
 // Gets a user
 app.get('/api/users/:userId', UsersController.getUser);
-
-// Signs up a user
-app.post('/api/signup', validateSignupUser, UsersController.signupUser);
 
 // Updates a user's photo
 app.put("/api/users/:userId/photo", authenticateRouteUser(), uploadUserPhoto, UsersController.updateUserPhoto);
@@ -61,11 +61,24 @@ app.delete("/api/users/:userId/photo", authenticateRouteUser(), UsersController.
 // Deletes a user
 app.delete("/api/users/:userId", authenticateRouteUser(), UsersController.deleteUser);
 
+/********************************************************************/
+
+
+/* AUTH *************************************************************/
+
+// Signs up a user
+app.post('/api/signup', validateSignupUser, UsersController.signupUser);
+
 // Logs in a user
 app.post('/api/login', UsersController.login);
 
 // Gets a user from token
 app.get('/api/tokenUser', authenticateRouteUser(), UsersController.getUserFromToken);
+
+/********************************************************************/
+
+
+/* POSTS ************************************************************/
 
 // Gets posts under pagination
 app.get('/api/posts', PostsController.getPaginatedPosts);
@@ -85,8 +98,19 @@ app.put('/api/posts/:postId/categories', authenticateRouteUser(), validatePostCa
 // Deletes a post
 app.delete('/api/posts/:postId', authenticateRouteUser(), PostsController.deletePost);
 
+// Add a like to a post from a user
+app.post('/api/posts/:postId/likes', authenticateRouteUser(), PostsController.addLikeToPost);
+
+/********************************************************************/
+
+
+/* CATEGORIES *******************************************************/
+
 // Gets categories
 app.get('/api/categories', CategoriesController.getCategories);
+
+/********************************************************************/
+
 
 /*
 ** ***********************************************************************************

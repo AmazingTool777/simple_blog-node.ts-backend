@@ -232,6 +232,27 @@ class PostsController {
         }
     }
 
+
+    // Add a like to a post from a user
+    static async addLikeToPost(req: Request, res: Response, next: NextFunction) {
+        try {
+            const { userId } = res.locals.authUser;
+            const { postId } = req.params;
+
+            const post = await PostModel.findOne({ _id: postId });
+            if (!post) return next(new AppError(404, "The post does not exist"));
+
+            const like = await LikeModel.create({
+                post: postId,
+                user: userId
+            });
+
+            res.json(like);
+        } catch (error) {
+            next(error);
+        }
+    }
+
 }
 
 export default PostsController;
