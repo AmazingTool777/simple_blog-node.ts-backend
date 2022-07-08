@@ -104,6 +104,9 @@ app.post('/api/posts/:postId/likes', authenticateRouteUser(), PostsController.ad
 // Removes a like from a post
 app.delete('/api/posts/:postId/likes/:likeId', authenticateRouteUser(), PostsController.removeLikeFromPost);
 
+// Gets a post's paginated comments
+app.get('/api/posts/:postId/comments', PostsController.getPostPaginatedComments);
+
 // Adds a comment to a post
 app.post('/api/posts/:postId/comments', authenticateRouteUser(), PostsController.addCommentToPost);
 

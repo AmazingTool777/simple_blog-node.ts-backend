@@ -12,7 +12,7 @@ import deleteApiPhoto from "../helpers/deleteApiPhoto-helper";
 import PostModel, { PostAttributes } from "../models/post-model";
 import CategoryModel from "../models/category-model";
 import LikeModel from "../models/like-model";
-import CommentModel from "../models/comment-model";
+import CommentModel, { CommentAttributes } from "../models/comment-model";
 
 // Posts photos config
 import { postsPhotoConfig } from "../configs/photos-config";
@@ -275,6 +275,26 @@ class PostsController {
             await like.remove();
 
             return res.sendStatus(204);
+        } catch (error) {
+            next(error);
+        }
+    }
+
+
+    // Gets a post's paginated comments
+    static async getPostPaginatedComments(req: Request, res: Response, next: NextFunction) {
+        try {
+            const { postId } = req.params;
+
+            const page = req.query.page ? parseInt(req.query.page as string) : 1;
+            const limit = req.query.limit ? parseInt(req.query.limit as string) : 5;
+            const sort = (!req.query.order || (req.query.order as string) === "asc" ? "" : "-") + "createdAt";
+            const populate = { field: "user", projection: "_id firstName lastName gender photoPath" };
+            const options = { filter: { post: postId }, sort, populate };
+
+            const paginatedComments = await paginatedFind<CommentAttributes>(CommentModel, page, limit, options);
+
+            res.json(paginatedComments);
         } catch (error) {
             next(error);
         }
