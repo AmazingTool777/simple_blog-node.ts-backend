@@ -12,6 +12,7 @@ import deleteApiPhoto from "../helpers/deleteApiPhoto-helper";
 import PostModel, { PostAttributes } from "../models/post-model";
 import CategoryModel from "../models/category-model";
 import LikeModel from "../models/like-model";
+import CommentModel from "../models/comment-model";
 
 // Posts photos config
 import { postsPhotoConfig } from "../configs/photos-config";
@@ -54,6 +55,7 @@ class PostsController {
             if (!post) return next(new AppError(404, "The post is not found"));
 
             const likesCount = await LikeModel.count({ post: post._id });
+            const commentsCount = await CommentModel.count({ post: post._id });
 
             let like;
             if (authUser) like = await LikeModel.findOne({ author: authUser._id });
@@ -61,6 +63,7 @@ class PostsController {
             const responseData: any = {
                 ...post.toJSON(),
                 likesCount,
+                commentsCount
             }
             if (authUser) responseData.like = like;
 
