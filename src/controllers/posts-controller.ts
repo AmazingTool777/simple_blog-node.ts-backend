@@ -280,6 +280,28 @@ class PostsController {
         }
     }
 
+
+    // Adds a comment to a post
+    static async addCommentToPost(req: Request, res: Response, next: NextFunction) {
+        try {
+            const { authUser } = res.locals;
+            const { postId } = req.params;
+
+            const post = await PostModel.findOne({ _id: postId });
+            if (!post) return next(new AppError(404, "The post does not exist"));
+
+            const comment = await CommentModel.create({
+                content: req.body.content,
+                post: postId,
+                user: authUser.userId
+            });
+
+            return res.status(201).json(comment);
+        } catch (error) {
+            next(error);
+        }
+    }
+
 }
 
 export default PostsController;
