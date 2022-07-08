@@ -242,6 +242,9 @@ class PostsController {
             const post = await PostModel.findOne({ _id: postId });
             if (!post) return next(new AppError(404, "The post does not exist"));
 
+            const existingLike = await LikeModel.findOne({ user: userId });
+            if (existingLike) return next(new AppError(400, 'The post is already liked by the user'));
+
             const like = await LikeModel.create({
                 post: postId,
                 user: userId
