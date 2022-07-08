@@ -56,7 +56,7 @@ class PostsController {
             const likesCount = await LikeModel.count({ post: post._id });
 
             let like;
-            if (authUser) like = await LikeModel.findOne({ user: authUser._id });
+            if (authUser) like = await LikeModel.findOne({ author: authUser._id });
 
             const responseData: any = {
                 ...post.toJSON(),
@@ -251,6 +251,27 @@ class PostsController {
             });
 
             res.json(like);
+        } catch (error) {
+            next(error);
+        }
+    }
+
+
+    // Removes a like from a post
+    static async removeLikeFromPost(req: Request, res: Response, next: NextFunction) {
+        try {
+            const { userId } = res.locals.authUser;
+            const { postId, likeId } = req.params;
+
+            const like = await LikeModel.findOne({ _id: likeId });
+            if (!like) return next(new AppError(404, "The like does not exist"));
+
+            if (!like.post.equals(postId) || !like.user.equals(userId))
+                return next(new AppError(403, "You are not allowed to remove this post"));
+
+            await like.remove();
+
+            return res.sendStatus(204);
         } catch (error) {
             next(error);
         }

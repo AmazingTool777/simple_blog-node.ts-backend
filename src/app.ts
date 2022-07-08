@@ -101,6 +101,9 @@ app.delete('/api/posts/:postId', authenticateRouteUser(), PostsController.delete
 // Add a like to a post from a user
 app.post('/api/posts/:postId/likes', authenticateRouteUser(), PostsController.addLikeToPost);
 
+// Removes a like from a post
+app.delete('/api/posts/:postId/likes/:likeId', authenticateRouteUser(), PostsController.removeLikeFromPost);
+
 /********************************************************************/
 
 
