@@ -2,22 +2,22 @@ import mongoose, { Schema, Types } from "mongoose";
 
 // Interface for a following model's attributes
 interface FollowingAttributes {
-    followerId: Types.ObjectId,
-    followedId: Types.ObjectId,
+    follower: Types.ObjectId,
+    followedUser: Types.ObjectId,
 }
 
 // Schema for a Following model
 const followingModelSchema = new Schema<FollowingAttributes>(
     {
-        followerId: {
+        follower: {
             type: Schema.Types.ObjectId,
             required: true,
-            ref: 'User'
+            ref: 'User',
         },
-        followedId: {
+        followedUser: {
             type: Schema.Types.ObjectId,
             required: true,
-            ref: 'User'
+            ref: 'User',
         }
     },
     {
