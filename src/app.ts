@@ -62,6 +62,9 @@ app.delete("/api/users/:userId/photo", authenticateRouteUser(), UsersController.
 // Deletes a user
 app.delete("/api/users/:userId", authenticateRouteUser(), UsersController.deleteUser);
 
+// Adds a following
+app.post('/api/users/:userId/followings', authenticateRouteUser(), UsersController.addFollowing);
+
 /********************************************************************/
 
 

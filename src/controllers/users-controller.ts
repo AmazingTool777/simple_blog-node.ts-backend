@@ -8,6 +8,7 @@ import AppError from "../@types/AppError-class";
 // Models
 import UserModel, { UserAttributes } from "../models/user-model";
 import PostModel from "../models/post-model";
+import FollowingModel from "../models/following-model";
 
 // Paginated find
 import paginatedFind from "../helpers/paginatedFind-helper";
@@ -234,6 +235,30 @@ class UsersController {
 
             res.sendStatus(204);
         } catch (error) {
+            next(error);
+        }
+    }
+
+
+    // Adds a following
+    static async addFollowing(req: Request, res: Response, next: NextFunction) {
+        try {
+            const { authUser } = res.locals;
+            const { userId } = req.params;
+
+            const followedUser = await UserModel.findById(userId);
+            if (!followedUser) return next(new AppError(404, "The followed user does not exist"));
+            if (followedUser._id.equals(authUser.userId))
+                return next(new AppError(403, "A user cannot follow himself/herself"));
+
+            const following = await FollowingModel.create({
+                followedId: followedUser._id,
+                followerId: authUser.userId
+            });
+
+            res.status(201).json(following);
+        }
+        catch (error) {
             next(error);
         }
     }
