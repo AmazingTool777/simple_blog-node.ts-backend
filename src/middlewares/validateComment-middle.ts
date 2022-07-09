@@ -9,7 +9,7 @@ import AppError from "../@types/AppError-class";
 
 // Comment schema
 const commentSchema: Schema = {
-    comment: {
+    content: {
         notEmpty: true,
         errorMessage: 'Comment content is required',
         trim: true
