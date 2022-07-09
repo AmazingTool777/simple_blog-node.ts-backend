@@ -68,6 +68,9 @@ app.get('/api/users/:userId/followings', UsersController.getFollowings);
 // Adds a following
 app.post('/api/users/:userId/followings', authenticateRouteUser(), UsersController.addFollowing);
 
+// Removes a following
+app.delete('/api/users/:userId/followings/:followingId', authenticateRouteUser(), UsersController.removeFollowing);
+
 /********************************************************************/
 
 

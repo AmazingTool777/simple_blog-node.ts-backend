@@ -301,6 +301,27 @@ class UsersController {
         }
     }
 
+
+    // Removes a following
+    static async removeFollowing(req: Request, res: Response, next: NextFunction) {
+        try {
+            const { authUser } = res.locals;
+            const { userId, followingId } = req.params;
+
+            const following = await FollowingModel.findById(followingId);
+            if (!following) return next(new AppError(404, "The following does not exist"));
+            if (!following.follower.equals(authUser.userId) || !following.followedUser.equals(userId))
+                return next(new AppError(403, "You're not allowed to remove this following"));
+
+            await following.remove();
+
+            res.sendStatus(204);
+        }
+        catch (error) {
+            next(error);
+        }
+    }
+
 }
 
 export default UsersController;
