@@ -108,6 +108,9 @@ app.put('/api/posts/:postId/categories', authenticateRouteUser(), validatePostCa
 // Deletes a post
 app.delete('/api/posts/:postId', authenticateRouteUser(), PostsController.deletePost);
 
+// Gets a post's paginated likes
+app.get('/api/posts/:postId/likes', PostsController.getPostPaginatedLikes);
+
 // Add a like to a post from a user
 app.post('/api/posts/:postId/likes', authenticateRouteUser(), PostsController.addLikeToPost);
 
