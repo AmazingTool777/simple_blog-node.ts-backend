@@ -114,6 +114,9 @@ app.post('/api/posts/:postId/comments', authenticateRouteUser(), validateComment
 // Updates a comment's content
 app.patch('/api/posts/:postId/comments/:commentId', authenticateRouteUser(), validateComment, PostsController.updateCommentContent);
 
+// Deletes a comment
+app.delete('/api/posts/:postId/comments/:commentId', authenticateRouteUser(), PostsController.deleteComment);
+
 /********************************************************************/
 
 

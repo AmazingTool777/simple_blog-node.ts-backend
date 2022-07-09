@@ -345,6 +345,28 @@ class PostsController {
         }
     }
 
+
+    // Deletes a comment
+    static async deleteComment(req: Request, res: Response, next: NextFunction) {
+        try {
+            const { authUser } = res.locals;
+            const { postId, commentId } = req.params;
+
+            const comment = await CommentModel.findById(commentId);
+            if (!comment) return next(new AppError(404, "The comment does not exist"));
+
+            if (!comment.post.equals(postId) || !comment.user.equals(authUser.userId))
+                return next(new AppError(403, "You are not allowed to delete this comment"));
+
+            await comment.remove();
+
+            res.sendStatus(204);
+        }
+        catch (error) {
+            next(error);
+        }
+    }
+
 }
 
 export default PostsController;
