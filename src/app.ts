@@ -15,6 +15,7 @@ import validateSignupUser from "./middlewares/validateSignupUser-middle";
 import validateUpdateUser from "./middlewares/validateUpdateUser-middle";
 import validateUpdatePassword from "./middlewares/validateUpdatePassword-middle";
 import validatePost, { validatePostTitleContentUpdate, validatePostCategoriesUpdate } from "./middlewares/validatePost-middle";
+import validateComment from "./middlewares/validateComment-middle";
 import uploadUserPhoto from "./middlewares/uploadUserPhoto-middle";
 import uploadPostPhoto from "./middlewares/uploadPostPhoto-middle";
 import { authenticateRouteUser } from "./middlewares/routeAuth-middle";
@@ -108,7 +109,10 @@ app.delete('/api/posts/:postId/likes/:likeId', authenticateRouteUser(), PostsCon
 app.get('/api/posts/:postId/comments', PostsController.getPostPaginatedComments);
 
 // Adds a comment to a post
-app.post('/api/posts/:postId/comments', authenticateRouteUser(), PostsController.addCommentToPost);
+app.post('/api/posts/:postId/comments', authenticateRouteUser(), validateComment, PostsController.addCommentToPost);
+
+// Updates a comment's content
+app.patch('/api/posts/:postId/comments/:commentId', authenticateRouteUser(), validateComment, PostsController.updateCommentContent);
 
 /********************************************************************/
 

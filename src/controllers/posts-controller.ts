@@ -322,6 +322,29 @@ class PostsController {
         }
     }
 
+
+    // Updates a comment's content
+    static async updateCommentContent(req: Request, res: Response, next: NextFunction) {
+        try {
+            const { authUser } = res.locals;
+            const { postId, commentId } = req.params;
+
+            const comment = await CommentModel.findById(commentId);
+            if (!comment) return next(new AppError(404, "The comment does not exist"));
+
+            if (!comment.post.equals(postId) || !comment.user.equals(authUser.userId))
+                return next(new AppError(403, "You are not allowed to update this comment"));
+
+            comment.content = req.body.content;
+            await comment.save();
+
+            res.json(comment);
+        }
+        catch (error) {
+            next(error);
+        }
+    }
+
 }
 
 export default PostsController;
