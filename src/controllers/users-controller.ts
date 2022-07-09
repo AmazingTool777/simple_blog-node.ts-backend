@@ -8,7 +8,7 @@ import AppError from "../@types/AppError-class";
 // Models
 import UserModel, { UserAttributes } from "../models/user-model";
 import PostModel from "../models/post-model";
-import FollowingModel from "../models/following-model";
+import FollowingModel, { FollowingAttributes } from "../models/following-model";
 
 // Paginated find
 import paginatedFind from "../helpers/paginatedFind-helper";
@@ -240,6 +240,44 @@ class UsersController {
     }
 
 
+    // Gets a user's followings, be it followers or followings
+    static async getFollowings(req: Request, res: Response, next: NextFunction) {
+        try {
+            const { userId } = req.params;
+
+            const page = req.query.page ? parseInt(req.query.page as string) : 1;
+            const limit = req.query.limit ? parseInt(req.query.limit as string) : 10;
+
+            const entity = req.query.entity ? (req.query.entity as string) : "followers";
+            const ENTITIES = ['followers', 'followeds'];
+            if (!ENTITIES.includes(entity))
+                return next(new AppError(400, "The entity must be either 'followers' or 'followeds'"));
+
+            const sort = (!req.query.order || (req.query.order as string) === "asc" ? "" : "-") + "createdAt";
+
+            /* 
+            The populated field and the queried field are swapped
+            */
+            const populatedField = entity === "followers" ? "follower" : "followedUser";
+            const queriedField = entity === "followers" ? "followedUser" : "follower";
+
+            const paginatedFollowings = await paginatedFind<FollowingAttributes>(FollowingModel, page, limit, {
+                filter: { [queriedField]: userId },
+                sort,
+                populate: {
+                    field: populatedField,
+                    projection: "_id firstName lastName gender photoPath"
+                }
+            });
+
+            res.json(paginatedFollowings);
+        }
+        catch (error) {
+            next(error);
+        }
+    }
+
+
     // Adds a following
     static async addFollowing(req: Request, res: Response, next: NextFunction) {
         try {
@@ -252,8 +290,8 @@ class UsersController {
                 return next(new AppError(403, "A user cannot follow himself/herself"));
 
             const following = await FollowingModel.create({
-                followedId: followedUser._id,
-                followerId: authUser.userId
+                followedUser: followedUser._id,
+                follower: authUser.userId
             });
 
             res.status(201).json(following);
