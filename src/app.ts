@@ -45,7 +45,7 @@ app.use('/public', express.static(path.join(__dirname, "../", 'static')));
 app.get('/api/users', UsersController.getUsers);
 
 // Gets a user
-app.get('/api/users/:userId', UsersController.getUser);
+app.get('/api/users/:userId', authenticateRouteUser(false), UsersController.getUser);
 
 // Updates a user's photo
 app.put("/api/users/:userId/photo", authenticateRouteUser(), uploadUserPhoto, UsersController.updateUserPhoto);

@@ -48,9 +48,27 @@ class UsersController {
     // Gets a user *********************************************************************
     static async getUser(req: Request, res: Response, next: NextFunction) {
         try {
-            const user = await UserModel.findOne({ _id: req.params.userId }).select('-password');
-            if (!user) return next(new AppError(404, "The user is not found"));
-            res.json(user);
+            const { authUser } = res.locals;
+            const { userId } = req.params;
+
+            const user = await UserModel.findById(userId).select('-password');
+            if (!user) return next(new AppError(404, "The user does not exist"));
+
+            const followersCount = await FollowingModel.count({ followedUser: userId });
+            const followedsCount = await FollowingModel.count({ follower: userId });
+
+            const responseData: any = {
+                ...user.toJSON(),
+                followersCount,
+                followedsCount
+            }
+
+            if (authUser) {
+                const following = await FollowingModel.findOne({ follower: authUser.userId });
+                responseData.following = following;
+            }
+
+            res.json(responseData);
         }
         catch (error) {
             next(error);
