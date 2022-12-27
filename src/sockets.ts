@@ -1,20 +1,45 @@
 import http from "http";
 import { Server } from "socket.io";
+import { Document, Types } from "mongoose";
 
 // JWT helper
 import { jwtVerify } from "./helpers/jwt-helper";
 
 // Socket ids helpers
-import { registerUserSocketId } from "./helpers/socketIds"
+import { registerUserSocketId, getUserSocketIds } from "./helpers/socketIds";
+
+// Actions event emitters
+import actionsEventEmitter from "./actionsEventEmitter";
+
+// Model attributes
+import { type UserAttributes } from "./models/user-model";
+import { type FollowingAttributes } from "./models/following-model";
 
 /* 
 ** TYPE DEFINITIONS *************************************************
 */
 
-// The socket data
+interface ServerToClientEvents {
+    new_follower: (notification: NotificationData<{ following: FollowingDocument }>) => void;
+}
+
 interface SocketData {
     userId?: string | null;
 }
+
+interface NotificationData<Payload = undefined> {
+    message: string;
+    payload?: Payload
+}
+
+// Transform a model attributes to its document type
+type ModelAttributesToDocument<ModelAttributes> = (Document<unknown, any, ModelAttributes> & ModelAttributes & {
+    _id: Types.ObjectId;
+})
+
+type UserDocument = ModelAttributesToDocument<UserAttributes>;
+
+type FollowingDocument = ModelAttributesToDocument<FollowingAttributes>;
 
 /* *************************************************************** */
 
@@ -24,7 +49,7 @@ interface SocketData {
  * @param server The running HTTP server application
  */
 export function setupSockets(server: http.Server) {
-    const io = new Server<{}, {}, {}, SocketData>(server);
+    const io = new Server<{}, ServerToClientEvents, {}, SocketData>(server);
 
     // Middleware for authenticating the sockets
     io.use(async (socket, next) => {
@@ -52,11 +77,34 @@ export function setupSockets(server: http.Server) {
         if (userId) {
             try {
                 registerUserSocketId(userId, socket.id);
-            } catch (error) {
-                console.log(error);
+            } catch (err) {
+                const error = err as Error;
+                console.log("Failed to register the user's socket id", error.message);
             }
         }
 
+        // socket.emit<"mpo" as >("mpo")
+    });
 
-    })
+    /* 
+    ** Subscriptions to http actions ********************************
+    */
+
+    // Following subscription
+    actionsEventEmitter.on("following_added", async (follower: UserDocument, following: FollowingDocument) => {
+        const followedUserSocketIds = await getUserSocketIds(following.followedUser.toString());
+        const notification = {
+            message: `${follower.firstName} ${follower.lastName} started following you`,
+            payload: {
+                following
+            }
+        };
+        for (const socketId of followedUserSocketIds) {
+            io.to(socketId).emit("new_follower", notification);
+        }
+    });
+
+
+
+    /* *********************************************************** */
 }
