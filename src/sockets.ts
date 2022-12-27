@@ -13,7 +13,9 @@ import actionsEventEmitter from "./actionsEventEmitter";
 
 // Model attributes
 import { type UserAttributes } from "./models/user-model";
+import { type PostAttributes } from "./models/post-model";
 import { type FollowingAttributes } from "./models/following-model";
+import { type LikeAttributes } from "./models/like-model";
 
 /* 
 ** TYPE DEFINITIONS *************************************************
@@ -21,6 +23,14 @@ import { type FollowingAttributes } from "./models/following-model";
 
 interface ServerToClientEvents {
     new_follower: (notification: NotificationData<{ following: FollowingDocument }>) => void;
+
+    post_like: (
+        notification: NotificationData<{
+            user: UserDocument,
+            post: PostDocument,
+            like: LikeDocument
+        }>
+    ) => void;
 }
 
 interface SocketData {
@@ -39,7 +49,11 @@ type ModelAttributesToDocument<ModelAttributes> = (Document<unknown, any, ModelA
 
 type UserDocument = ModelAttributesToDocument<UserAttributes>;
 
+type PostDocument = ModelAttributesToDocument<PostAttributes>;
+
 type FollowingDocument = ModelAttributesToDocument<FollowingAttributes>;
+
+type LikeDocument = ModelAttributesToDocument<LikeAttributes>;
 
 /* *************************************************************** */
 
@@ -104,7 +118,22 @@ export function setupSockets(server: http.Server) {
         }
     });
 
-
+    // Like on a post
+    actionsEventEmitter.on("like_added", async (post: PostDocument, like: LikeDocument, user: UserDocument) => {
+        console.log(post.author.toString());
+        const authorSocketIds = await getUserSocketIds(post.author.toString());
+        const notification = {
+            message: `${user.firstName} ${user.lastName} liked your post: ${post.title}`,
+            payload: {
+                post,
+                like,
+                user
+            }
+        };
+        for (const socketId of authorSocketIds) {
+            io.to(socketId).emit("post_like", notification);
+        }
+    });
 
     /* *********************************************************** */
 }

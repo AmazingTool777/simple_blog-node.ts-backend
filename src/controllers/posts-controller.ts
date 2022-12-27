@@ -9,6 +9,7 @@ import paginatedFind from "../helpers/paginatedFind-helper";
 import deleteApiPhoto from "../helpers/deleteApiPhoto-helper";
 
 // Models
+import UserModel from "../models/user-model";
 import PostModel, { PostAttributes } from "../models/post-model";
 import CategoryModel from "../models/category-model";
 import LikeModel, { LikeAttributes } from "../models/like-model";
@@ -16,6 +17,9 @@ import CommentModel, { CommentAttributes } from "../models/comment-model";
 
 // Posts photos config
 import { postsPhotoConfig } from "../configs/photos-config";
+
+// Actions event emitter
+import actionsEventEmitter from "../actionsEventEmitter";
 
 // Class for posts controller
 class PostsController {
@@ -58,7 +62,7 @@ class PostsController {
             const commentsCount = await CommentModel.count({ post: post._id });
 
             let like;
-            if (authUser) like = await LikeModel.findOne({ author: authUser._id });
+            if (authUser) like = await LikeModel.findOne({ post: post._id, user: authUser.userId });
 
             const responseData: any = {
                 ...post.toJSON(),
@@ -271,16 +275,21 @@ class PostsController {
             const { userId } = res.locals.authUser;
             const { postId } = req.params;
 
+            const user = await UserModel.findById(userId);
+            if (!user) return next(new AppError(404, "The user to authenticate does not exist"));
+
             const post = await PostModel.findOne({ _id: postId });
             if (!post) return next(new AppError(404, "The post does not exist"));
 
-            const existingLike = await LikeModel.findOne({ user: userId });
+            const existingLike = await LikeModel.findOne({ post: post._id, user: user._id });
             if (existingLike) return next(new AppError(400, 'The post is already liked by the user'));
 
             const like = await LikeModel.create({
                 post: postId,
-                user: userId
+                user: user._id
             });
+
+            actionsEventEmitter.emit("like_added", post, like, user);
 
             res.json(like);
         } catch (error) {
