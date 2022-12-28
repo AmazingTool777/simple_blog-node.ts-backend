@@ -31,6 +31,13 @@ interface ServerToClientEvents {
             like: LikeDocument
         }>
     ) => void;
+
+    new_post: (
+        notification: NotificationData<{
+            author: UserDocument,
+            post: PostDocument,
+        }>
+    ) => void;
 }
 
 interface SocketData {
@@ -96,8 +103,6 @@ export function setupSockets(server: http.Server) {
                 console.log("Failed to register the user's socket id", error.message);
             }
         }
-
-        // socket.emit<"mpo" as >("mpo")
     });
 
     /* 
@@ -120,7 +125,6 @@ export function setupSockets(server: http.Server) {
 
     // Like on a post
     actionsEventEmitter.on("like_added", async (post: PostDocument, like: LikeDocument, user: UserDocument) => {
-        console.log(post.author.toString());
         const authorSocketIds = await getUserSocketIds(post.author.toString());
         const notification = {
             message: `${user.firstName} ${user.lastName} liked your post: ${post.title}`,
@@ -132,6 +136,25 @@ export function setupSockets(server: http.Server) {
         };
         for (const socketId of authorSocketIds) {
             io.to(socketId).emit("post_like", notification);
+        }
+    });
+
+    // Published post to followers
+    actionsEventEmitter.on("post_added", async (post: PostDocument, author: UserDocument, followers: UserDocument[]) => {
+        const notification = {
+            message: `${author.firstName} ${author.lastName} published a post: ${post.title}`,
+            payload: {
+                post,
+                author
+            }
+        }
+        for (const follower of followers) {
+            getUserSocketIds(follower._id.toString())
+                .then(socketIds => {
+                    for (const socketId of socketIds) {
+                        io.to(socketId).emit("new_post", notification);
+                    }
+                })
         }
     });
 

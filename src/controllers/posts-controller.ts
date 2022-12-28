@@ -85,12 +85,15 @@ class PostsController {
             const { userId } = res.locals.authUser;
             const photoFilename = req.file?.filename;
 
+            const user = await UserModel.findById(userId);
+            if (!user) return next(new AppError(404, "The user to authenticate does not exist"));
+
             // Creating the new post document
             const post = new PostModel({
                 title: req.body.title,
                 content: req.body.content,
                 photoPath: `${postsPhotoConfig.urlPath}/${photoFilename}`,
-                author: userId
+                author: user._id
             });
             // Re-formatting the categories
             if (!req.body.categories) req.body.categories = [];
@@ -118,6 +121,34 @@ class PostsController {
 
             // Saving the post to db
             await post.save();
+
+            // Fetching author's followers
+            UserModel.aggregate([
+                {
+                    $lookup: {
+                        from: "followings",
+                        localField: "_id",
+                        foreignField: "follower",
+                        pipeline: [
+                            {
+                                $match: {
+                                    followedUser: user._id
+                                }
+                            }
+                        ],
+                        as: "following"
+                    }
+                },
+                {
+                    $unwind: {
+                        path: "$following",
+                        preserveNullAndEmptyArrays: false
+                    }
+                }
+            ]).then(followers => {
+                // Emitting a new post event to followers
+                actionsEventEmitter.emit("post_added", post, user, followers);
+            });
 
             res.send(post);
         }
