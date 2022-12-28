@@ -53,12 +53,16 @@ interface ServerToClientEvents {
     ) => void;
 
     comment_deleted: (data: { commentId: Types.ObjectId }) => void;
+
+    user_commenting: (postId: string) => void;
 }
 
 interface ClientToServerEvents {
     post_view: (postId: string) => void;
 
     post_leave: (postId: string) => void;
+
+    user_commenting: (postId: string) => void;
 }
 
 interface SocketData {
@@ -141,6 +145,11 @@ export function setupSockets(server: http.Server) {
         // When a user leaves a post's page, make the user's socket leave the post's room
         socket.on("post_leave", (postId: string) => {
             socket.leave(getPostRoom(postId));
+        });
+
+        // When a user's writing a comment, also notify all other users that are viewing the post about that event
+        socket.on("user_commenting", (postId: string) => {
+            socket.broadcast.to(getPostRoom(postId)).emit("user_commenting", postId);
         });
 
         socket.on("disconnect", async () => {
