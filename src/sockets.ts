@@ -51,6 +51,8 @@ interface ServerToClientEvents {
             user: UserDocument,
         }
     ) => void;
+
+    comment_deleted: (data: { commentId: Types.ObjectId }) => void;
 }
 
 interface ClientToServerEvents {
@@ -229,6 +231,14 @@ export function setupSockets(server: http.Server) {
             comment,
             post,
             user
+        });
+    });
+
+    // Comment deleted
+    actionsEventEmitter.on("comment_deleted", async (commentId: Types.ObjectId, postId: string) => {
+        // Emitting the comment modified event to all users viewing the post
+        io.to(getPostRoom(postId)).emit("comment_deleted", {
+            commentId,
         });
     });
 

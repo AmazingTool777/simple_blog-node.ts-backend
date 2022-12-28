@@ -443,6 +443,8 @@ class PostsController {
 
             await comment.remove();
 
+            actionsEventEmitter.emit("comment_deleted", comment._id, postId);
+
             res.sendStatus(204);
         }
         catch (error) {
