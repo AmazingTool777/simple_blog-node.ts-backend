@@ -376,14 +376,20 @@ class PostsController {
             const { authUser } = res.locals;
             const { postId } = req.params;
 
+            const user = await UserModel.findById(authUser.userId);
+            if (!user) return next(new AppError(404, "The user to authenticate does not exist"));
+
             const post = await PostModel.findOne({ _id: postId });
             if (!post) return next(new AppError(404, "The post does not exist"));
 
             const comment = await CommentModel.create({
                 content: req.body.content,
                 post: postId,
-                user: authUser.userId
+                user: user._id
             });
+
+            // Emitting the event that a comment has been added
+            actionsEventEmitter.emit("comment_added", comment, post, user);
 
             return res.status(201).json(comment);
         } catch (error) {

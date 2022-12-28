@@ -16,6 +16,7 @@ import { type UserAttributes } from "./models/user-model";
 import { type PostAttributes } from "./models/post-model";
 import { type FollowingAttributes } from "./models/following-model";
 import { type LikeAttributes } from "./models/like-model";
+import { type CommentAttributes } from "./models/comment-model";
 
 /* 
 ** TYPE DEFINITIONS *************************************************
@@ -38,6 +39,10 @@ interface ServerToClientEvents {
             post: PostDocument,
         }>
     ) => void;
+
+    post_comment: (notification: PostCommentNotification) => void;
+
+    comment_added: (data: PostCommentNotification) => void;
 }
 
 interface ClientToServerEvents {
@@ -55,6 +60,12 @@ interface NotificationData<Payload = undefined> {
     payload?: Payload
 }
 
+type PostCommentNotification = NotificationData<{
+    comment: CommentDocument,
+    post: PostDocument,
+    user: UserDocument
+}>
+
 // Transform a model attributes to its document type
 type ModelAttributesToDocument<ModelAttributes> = (Document<unknown, any, ModelAttributes> & ModelAttributes & {
     _id: Types.ObjectId;
@@ -67,6 +78,8 @@ type PostDocument = ModelAttributesToDocument<PostAttributes>;
 type FollowingDocument = ModelAttributesToDocument<FollowingAttributes>;
 
 type LikeDocument = ModelAttributesToDocument<LikeAttributes>;
+
+type CommentDocument = ModelAttributesToDocument<CommentAttributes>;
 
 /* *************************************************************** */
 
@@ -183,7 +196,23 @@ export function setupSockets(server: http.Server) {
     });
 
     // Comment added
-    // actionsEventEmitter.on("comment_added", async () => {});
+    actionsEventEmitter.on("comment_added", async (comment: CommentDocument, post: PostDocument, user: UserDocument) => {
+        const authorSocketIds = await getUserSocketIds(post.author.toString());
+        const newCommentNotification = {
+            message: `${user.firstName} ${user.lastName} commented on your post: ${post.title}`,
+            payload: {
+                comment,
+                post,
+                user
+            }
+        }
+        // Emitting the post comment notification to the author of the post
+        for (const socketId of authorSocketIds) {
+            io.to(socketId).emit("post_comment", newCommentNotification);
+        }
+        // Emitting the comment added event to all users viewing the post
+        io.to(getPostRoom(post._id.toString())).emit("comment_added", newCommentNotification);
+    });
 
     /* *********************************************************** */
 }
