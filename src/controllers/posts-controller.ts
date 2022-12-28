@@ -404,14 +404,22 @@ class PostsController {
             const { authUser } = res.locals;
             const { postId, commentId } = req.params;
 
+            const user = await UserModel.findById(authUser.userId);
+            if (!user) return next(new AppError(404, "The user to authenticate does not exist"));
+
             const comment = await CommentModel.findById(commentId);
             if (!comment) return next(new AppError(404, "The comment does not exist"));
 
-            if (!comment.post.equals(postId) || !comment.user.equals(authUser.userId))
+            if (!comment.post.equals(postId) || !comment.user.equals(user._id))
                 return next(new AppError(403, "You are not allowed to update this comment"));
 
             comment.content = req.body.content;
             await comment.save();
+
+            const post = await PostModel.findById({ _id: comment.post });
+
+            // Emitting a post updated event
+            actionsEventEmitter.emit("comment_updated", comment, post, user);
 
             res.json(comment);
         }

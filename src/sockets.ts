@@ -43,6 +43,14 @@ interface ServerToClientEvents {
     post_comment: (notification: PostCommentNotification) => void;
 
     comment_added: (data: PostCommentNotification) => void;
+
+    comment_modified: (
+        data: {
+            comment: CommentDocument,
+            post: PostDocument,
+            user: UserDocument,
+        }
+    ) => void;
 }
 
 interface ClientToServerEvents {
@@ -212,6 +220,16 @@ export function setupSockets(server: http.Server) {
         }
         // Emitting the comment added event to all users viewing the post
         io.to(getPostRoom(post._id.toString())).emit("comment_added", newCommentNotification);
+    });
+
+    // Comment updated
+    actionsEventEmitter.on("comment_updated", async (comment: CommentDocument, post: PostDocument, user: UserDocument) => {
+        // Emitting the comment modified event to all users viewing the post
+        io.to(getPostRoom(post._id.toString())).emit("comment_modified", {
+            comment,
+            post,
+            user
+        });
     });
 
     /* *********************************************************** */
