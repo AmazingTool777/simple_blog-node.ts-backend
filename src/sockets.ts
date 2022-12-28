@@ -6,7 +6,7 @@ import { Document, Types } from "mongoose";
 import { jwtVerify } from "./helpers/jwt-helper";
 
 // Socket ids helpers
-import { registerUserSocketId, getUserSocketIds } from "./helpers/socketIds";
+import { registerUserSocketId, getUserSocketIds, removeUserSocketId } from "./helpers/socketIds";
 
 // Actions event emitters
 import actionsEventEmitter from "./actionsEventEmitter";
@@ -40,6 +40,12 @@ interface ServerToClientEvents {
     ) => void;
 }
 
+interface ClientToServerEvents {
+    post_view: (postId: string) => void;
+
+    post_leave: (postId: string) => void;
+}
+
 interface SocketData {
     userId?: string | null;
 }
@@ -70,7 +76,7 @@ type LikeDocument = ModelAttributesToDocument<LikeAttributes>;
  * @param server The running HTTP server application
  */
 export function setupSockets(server: http.Server) {
-    const io = new Server<{}, ServerToClientEvents, {}, SocketData>(server);
+    const io = new Server<ClientToServerEvents, ServerToClientEvents, {}, SocketData>(server);
 
     // Middleware for authenticating the sockets
     io.use(async (socket, next) => {
@@ -103,6 +109,24 @@ export function setupSockets(server: http.Server) {
                 console.log("Failed to register the user's socket id", error.message);
             }
         }
+
+        // When a user views a post, make the user's socket join the post's room
+        socket.on("post_view", (postId: string) => {
+            socket.join(getPostRoom(postId));
+        });
+
+        // When a user leaves a post's page, make the user's socket leave the post's room
+        socket.on("post_leave", (postId: string) => {
+            socket.leave(getPostRoom(postId));
+        });
+
+        socket.on("disconnect", async () => {
+            // If an authenticated user was attached to the socket,
+            // remove the socket id of that user from the Redis cache
+            if (userId) {
+                await removeUserSocketId(userId, socket.id);
+            }
+        });
     });
 
     /* 
@@ -158,5 +182,13 @@ export function setupSockets(server: http.Server) {
         }
     });
 
+    // Comment added
+    // actionsEventEmitter.on("comment_added", async () => {});
+
     /* *********************************************************** */
+}
+
+// HELPER: Gets the name of a post's room
+function getPostRoom(postId: string) {
+    return `simpleblog-post-${postId}`;
 }
