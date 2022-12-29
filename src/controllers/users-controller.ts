@@ -22,6 +22,9 @@ import deleteApiPhoto from "../helpers/deleteApiPhoto-helper";
 // User photo config
 import { usersPhotoConfig, postsPhotoConfig } from "../configs/photos-config";
 
+// Actions event emitter
+import actionsEventEmitter from "../actionsEventEmitter";
+
 // Users controller class
 class UsersController {
 
@@ -302,15 +305,19 @@ class UsersController {
             const { authUser } = res.locals;
             const { userId } = req.params;
 
+            const follower = await UserModel.findById(authUser.userId);
             const followedUser = await UserModel.findById(userId);
+            if (!follower) return next(new AppError(404, "The user to authenticate does not exist"));
             if (!followedUser) return next(new AppError(404, "The followed user does not exist"));
-            if (followedUser._id.equals(authUser.userId))
+            if (followedUser._id.equals(follower._id))
                 return next(new AppError(403, "A user cannot follow himself/herself"));
 
             const following = await FollowingModel.create({
                 followedUser: followedUser._id,
-                follower: authUser.userId
+                follower: follower._id
             });
+
+            actionsEventEmitter.emit("following_added", follower, following);
 
             res.status(201).json(following);
         }

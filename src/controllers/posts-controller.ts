@@ -9,6 +9,7 @@ import paginatedFind from "../helpers/paginatedFind-helper";
 import deleteApiPhoto from "../helpers/deleteApiPhoto-helper";
 
 // Models
+import UserModel from "../models/user-model";
 import PostModel, { PostAttributes } from "../models/post-model";
 import CategoryModel from "../models/category-model";
 import LikeModel, { LikeAttributes } from "../models/like-model";
@@ -16,6 +17,9 @@ import CommentModel, { CommentAttributes } from "../models/comment-model";
 
 // Posts photos config
 import { postsPhotoConfig } from "../configs/photos-config";
+
+// Actions event emitter
+import actionsEventEmitter from "../actionsEventEmitter";
 
 // Class for posts controller
 class PostsController {
@@ -58,7 +62,7 @@ class PostsController {
             const commentsCount = await CommentModel.count({ post: post._id });
 
             let like;
-            if (authUser) like = await LikeModel.findOne({ author: authUser._id });
+            if (authUser) like = await LikeModel.findOne({ post: post._id, user: authUser.userId });
 
             const responseData: any = {
                 ...post.toJSON(),
@@ -81,12 +85,15 @@ class PostsController {
             const { userId } = res.locals.authUser;
             const photoFilename = req.file?.filename;
 
+            const user = await UserModel.findById(userId);
+            if (!user) return next(new AppError(404, "The user to authenticate does not exist"));
+
             // Creating the new post document
             const post = new PostModel({
                 title: req.body.title,
                 content: req.body.content,
                 photoPath: `${postsPhotoConfig.urlPath}/${photoFilename}`,
-                author: userId
+                author: user._id
             });
             // Re-formatting the categories
             if (!req.body.categories) req.body.categories = [];
@@ -114,6 +121,34 @@ class PostsController {
 
             // Saving the post to db
             await post.save();
+
+            // Fetching author's followers
+            UserModel.aggregate([
+                {
+                    $lookup: {
+                        from: "followings",
+                        localField: "_id",
+                        foreignField: "follower",
+                        pipeline: [
+                            {
+                                $match: {
+                                    followedUser: user._id
+                                }
+                            }
+                        ],
+                        as: "following"
+                    }
+                },
+                {
+                    $unwind: {
+                        path: "$following",
+                        preserveNullAndEmptyArrays: false
+                    }
+                }
+            ]).then(followers => {
+                // Emitting a new post event to followers
+                actionsEventEmitter.emit("post_added", post, user, followers);
+            });
 
             res.send(post);
         }
@@ -271,16 +306,21 @@ class PostsController {
             const { userId } = res.locals.authUser;
             const { postId } = req.params;
 
+            const user = await UserModel.findById(userId);
+            if (!user) return next(new AppError(404, "The user to authenticate does not exist"));
+
             const post = await PostModel.findOne({ _id: postId });
             if (!post) return next(new AppError(404, "The post does not exist"));
 
-            const existingLike = await LikeModel.findOne({ user: userId });
+            const existingLike = await LikeModel.findOne({ post: post._id, user: user._id });
             if (existingLike) return next(new AppError(400, 'The post is already liked by the user'));
 
             const like = await LikeModel.create({
                 post: postId,
-                user: userId
+                user: user._id
             });
+
+            actionsEventEmitter.emit("like_added", post, like, user);
 
             res.json(like);
         } catch (error) {
@@ -336,14 +376,20 @@ class PostsController {
             const { authUser } = res.locals;
             const { postId } = req.params;
 
+            const user = await UserModel.findById(authUser.userId);
+            if (!user) return next(new AppError(404, "The user to authenticate does not exist"));
+
             const post = await PostModel.findOne({ _id: postId });
             if (!post) return next(new AppError(404, "The post does not exist"));
 
             const comment = await CommentModel.create({
                 content: req.body.content,
                 post: postId,
-                user: authUser.userId
+                user: user._id
             });
+
+            // Emitting the event that a comment has been added
+            actionsEventEmitter.emit("comment_added", comment, post, user);
 
             return res.status(201).json(comment);
         } catch (error) {
@@ -358,14 +404,22 @@ class PostsController {
             const { authUser } = res.locals;
             const { postId, commentId } = req.params;
 
+            const user = await UserModel.findById(authUser.userId);
+            if (!user) return next(new AppError(404, "The user to authenticate does not exist"));
+
             const comment = await CommentModel.findById(commentId);
             if (!comment) return next(new AppError(404, "The comment does not exist"));
 
-            if (!comment.post.equals(postId) || !comment.user.equals(authUser.userId))
+            if (!comment.post.equals(postId) || !comment.user.equals(user._id))
                 return next(new AppError(403, "You are not allowed to update this comment"));
 
             comment.content = req.body.content;
             await comment.save();
+
+            const post = await PostModel.findById({ _id: comment.post });
+
+            // Emitting a post updated event
+            actionsEventEmitter.emit("comment_updated", comment, post, user);
 
             res.json(comment);
         }
@@ -388,6 +442,8 @@ class PostsController {
                 return next(new AppError(403, "You are not allowed to delete this comment"));
 
             await comment.remove();
+
+            actionsEventEmitter.emit("comment_deleted", comment._id, postId);
 
             res.sendStatus(204);
         }
