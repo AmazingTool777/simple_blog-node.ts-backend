@@ -2,7 +2,7 @@
 /node_modules
 
 # Distributable source code
-/dist
+# /dist
 
 # Static files
 /static
