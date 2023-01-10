@@ -32,8 +32,13 @@ const development = new NetworkConfig({
     port: process.env.PORT || 5000
 });
 
+// Production config
+const production = new NetworkConfig({
+    url: process.env.APP_URL
+});
+
 // The current config
-let currentConfig: NetworkConfig = development;
+let currentConfig: NetworkConfig = process.env.NODE_ENV ? production : development;
 
 export default currentConfig;
-export { development };
+export { development, production };

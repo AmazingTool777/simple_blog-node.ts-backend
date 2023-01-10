@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.development = void 0;
+exports.production = exports.development = void 0;
 // Class for a network config
 class NetworkConfig {
     protocol = "http";
@@ -25,6 +25,11 @@ const development = new NetworkConfig({
     port: process.env.PORT || 5000
 });
 exports.development = development;
+// Production config
+const production = new NetworkConfig({
+    url: process.env.APP_URL
+});
+exports.production = production;
 // The current config
-let currentConfig = development;
+let currentConfig = process.env.NODE_ENV ? production : development;
 exports.default = currentConfig;
