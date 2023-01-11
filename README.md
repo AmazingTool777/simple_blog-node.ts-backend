@@ -28,4 +28,4 @@ Starts the ready to use node.js application server.
 
 ### Deployment
 
-This project is deployed on Glitch under the following URL: https://distinct-heavy-lighter.glitch.me/
+This project is deployed on Glitch under the following URL: https://foil-steel-amazonsaurus.glitch.me/
