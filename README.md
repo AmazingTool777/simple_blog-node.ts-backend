@@ -1,6 +1,6 @@
 # Simple blog backend REST API
 
-This is the repository of the REST API as a backend of my Simple blog project built with React that you can view here: https://github.com/ToolTra/Simple-blog-react.js-front
+This is the repository of the REST API as a backend of my Simple blog project built with React that you can view here: https://github.com/AmazingTool777/Simple-blog-react.js-front
 
 ## Technologies
 
